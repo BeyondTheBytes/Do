@@ -1,4 +1,5 @@
 import 'dart:collection';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 
@@ -50,6 +51,64 @@ class EntirelyTappable extends StatelessWidget {
     return Padding(
       padding: localPadding,
       child: child,
+    );
+  }
+}
+
+class CustomLoading extends StatelessWidget {
+  final double? value;
+  final Color? color;
+  final bool forceDefaultSize;
+
+  const CustomLoading({this.value, this.color}) : forceDefaultSize = false;
+
+  /// This should be used when this widget takes the size of the parent
+  /// (i.e.: in a list view)
+  const CustomLoading.forceDefaultSize({this.value, this.color})
+      : forceDefaultSize = true;
+
+  static double defaultSize(BuildContext context) => min(
+        115,
+        min(
+          MediaQuery.of(context).size.width * 0.2,
+          MediaQuery.of(context).size.height * 0.2,
+        ),
+      );
+
+  @override
+  Widget build(BuildContext context) {
+    final localValue = value;
+    return Center(
+      child: _buildSizeConstraints(
+        context,
+        child: CircularProgressIndicator(
+          value: localValue == null || localValue <= 0 ? null : localValue,
+          strokeWidth: 4,
+          valueColor: AlwaysStoppedAnimation<Color>(color ?? Colors.grey[800]!),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSizeConstraints(BuildContext context, {required Widget child}) {
+    final size = defaultSize(context);
+    if (forceDefaultSize) {
+      return Container(
+        width: size,
+        height: size,
+        child: child,
+      );
+    }
+    return AspectRatio(
+      aspectRatio: 1,
+      child: Container(
+        constraints: BoxConstraints(
+          // Default size, this doesn't actually prohibit it to be smaller
+          minWidth: size,
+          minHeight: size,
+        ),
+        child: child,
+      ),
     );
   }
 }

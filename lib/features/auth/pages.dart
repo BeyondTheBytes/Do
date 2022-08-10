@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 
 import '../../database/services.dart';
 import '../../domain/utils.dart';
+import '../../presentation/button.dart';
 import '../../presentation/theme.dart';
 import '../../presentation/utils.dart';
 import '../../routes.dart';
@@ -130,17 +131,19 @@ class _SignPageState extends State<SignPage> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              TextButton(
+              CustomButton(
                 child: _signUp ? Text('Já tem conta?') : Text('Não tem conta?'),
+                filled: false,
                 onPressed: () {
                   setState(() {
                     _signUp = !_signUp;
                   });
                 },
               ),
-              OutlinedButton(
+              CustomButton(
                 child: _signUp ? Text('Cadastrar') : Text('Entrar'),
                 style: AppButton.of(context).largeFilled,
+                loadingText: false,
                 onPressed: () => _onSign(context),
               ),
             ],
