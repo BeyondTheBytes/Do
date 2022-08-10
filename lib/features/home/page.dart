@@ -1,9 +1,7 @@
-import 'dart:io';
 import 'dart:math';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:provider/provider.dart';
@@ -11,14 +9,12 @@ import 'package:provider/provider.dart';
 import '../../database/dataclass.dart';
 import '../../database/services.dart';
 import '../../domain/structures.dart';
-import '../../domain/utils.dart';
-import '../../presentation/button.dart';
 import '../../presentation/event.dart';
 import '../../presentation/theme.dart';
 import '../../presentation/utils.dart';
-import '../../routes.dart';
 import '../user/sports.dart';
 import '../utils/location.dart';
+import 'create_event.dart';
 
 // TODO: add editable
 const _radius = 40.0;
@@ -191,7 +187,7 @@ class _HomeWrapperState extends State<_HomeWrapper> {
                         bottom: MediaQuery.of(context).padding.bottom + 100),
                 child: Align(
                   alignment: Alignment.bottomCenter,
-                  child: _CreateEventDialog(
+                  child: CreateEventDialog(
                     onAdd: () {
                       setState(() {
                         _openned = false;
@@ -234,155 +230,5 @@ class _FloatingActionButton extends StatelessWidget {
       ),
       onPressed: () => onTap(context),
     );
-  }
-}
-
-// ////////////////////////////////////////////////////////////////
-// DIALOG
-// ////////////////////////////////////////////////////////////////
-
-enum _EventDay { today, tomorrow }
-
-class _CreateEventDialog extends StatefulWidget {
-  final Function() onAdd;
-  const _CreateEventDialog({required this.onAdd});
-  @override
-  State<_CreateEventDialog> createState() => _CreateEventDialogState();
-}
-
-class _CreateEventDialogState extends State<_CreateEventDialog> {
-  Sport? _selectedSport = null;
-  _EventDay? _selectedDay = null;
-  TimeOfDay? _selectedTime = null;
-  final _place = TextEditingController();
-  final _observations = TextEditingController();
-
-  @override
-  void dispose() {
-    _place.dispose();
-    _observations.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    const fieldsPadding = SizedBox(height: 10, width: 10);
-    final selectedTime = _selectedTime;
-    return CustomDialog(
-      title: 'Novo Evento',
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            PlatformSelect<Sport>(
-              hintText: 'Esporte',
-              cupertinoDialogHeight: 230,
-              cupertinoItemExtent: 45,
-              itemBuilder: (context, sport) => Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    sportIcon(sport),
-                    color: Theme.of(context).inputDecorationTheme.iconColor,
-                  ),
-                  SizedBox(width: 10),
-                  Text(sportStr(sport).toUpperCase()),
-                ],
-              ),
-              items: Sport.values,
-              value: _selectedSport,
-              onChanged: (v) => setState(() => _selectedSport = v),
-            ),
-            Row(
-              children: <Widget>[
-                Expanded(
-                  child: PlatformSelect<_EventDay>(
-                    hintText: 'Dia',
-                    itemBuilder: (context, day) {
-                      switch (day) {
-                        case _EventDay.today:
-                          return Text('Hoje');
-                        case _EventDay.tomorrow:
-                          return Text('Amanhã');
-                      }
-                    },
-                    items: _EventDay.values,
-                    value: _selectedDay,
-                    onChanged: (v) => setState(() => _selectedDay = v),
-                    cupertinoDialogHeight: 150,
-                  ),
-                ),
-                Expanded(
-                  child: CustomDropdownButton(
-                    hintText: 'Horário',
-                    selected: (selectedTime == null)
-                        ? null
-                        : Text(
-                            """${selectedTime.hour}h ${selectedTime.minute}min""",
-                          ),
-                    onTap: () => _chooseTimeOfDay(context),
-                  ),
-                ),
-              ].withBetween(fieldsPadding),
-            ),
-            TextField(
-              controller: _place,
-              decoration: InputDecoration(hintText: 'Local'),
-            ),
-            TextField(
-              controller: _observations,
-              decoration: InputDecoration(hintText: 'Observações'),
-            ),
-            Align(
-              alignment: Alignment.centerRight,
-              child: CustomButton(
-                child: Text('Criar Evento'),
-                style: AppButton.of(context).largeFilled,
-                stretch: false,
-                loadingText: false,
-                onPressed: _createEvent,
-              ),
-            ),
-          ].withBetween(fieldsPadding),
-        ),
-      ),
-    );
-  }
-
-  // CLICKS
-
-  void _chooseTimeOfDay(BuildContext context) async {
-    if (Platform.isIOS) {
-      showCupertinoSelect<void>(
-        context: context,
-        builder: (context) => Container(
-          height: 250,
-          child: CupertinoTimerPicker(
-            mode: CupertinoTimerPickerMode.hm,
-            onTimerDurationChanged: (newDuration) {
-              final timeOfDay = TimeOfDay(
-                  hour: newDuration.inHours,
-                  minute: newDuration.inMinutes % 60);
-              setState(() => _selectedTime = timeOfDay);
-            },
-          ),
-        ),
-      );
-    } else {
-      final timeOfDay = await showTimePicker(
-        context: context,
-        initialTime: TimeOfDay.now(),
-        initialEntryMode: TimePickerEntryMode.input,
-      );
-      if (timeOfDay != null) {
-        setState(() => _selectedTime = timeOfDay);
-      }
-    }
-  }
-
-  Future<void> _createEvent() async {
-    // TODO:
-    widget.onAdd();
   }
 }
