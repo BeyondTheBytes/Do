@@ -1,3 +1,231 @@
 import 'package:flutter/material.dart';
 
-final theme = ThemeData();
+final _appColor = AppColors(
+  darkest: Color(0xff202233),
+  dark: Color(0xff161E5D),
+  medium: Color(0xff4657D5),
+);
+final _colorScheme = ColorScheme(
+  brightness: Brightness.dark,
+  primary: _appColor.medium,
+  onPrimary: Colors.white,
+  secondary: _appColor.medium,
+  onSecondary: Colors.black,
+  background: _appColor.darkest,
+  onBackground: Colors.white,
+  surface: Colors.white,
+  onSurface: _appColor.darkest,
+  error: Color(0xffF85454),
+  onError: Colors.white,
+);
+final _primarySwatch = MaterialColor(
+  _colorScheme.primary.value,
+  _createSwatch(_colorScheme.primary),
+);
+
+final _headlineFamily = 'Ultra';
+final _bodyFamily = 'Inter';
+final _appText = AppTexts(
+  kicker: TextStyle(
+    fontFamily: _bodyFamily,
+    fontSize: 45,
+    fontStyle: FontStyle.italic,
+    color: _appColor.darkest,
+  ),
+  title1: TextStyle(
+    fontFamily: _headlineFamily,
+    fontSize: 72,
+    color: _appColor.darkest,
+  ),
+  title2: TextStyle(
+    fontFamily: _headlineFamily,
+    fontSize: 32,
+    color: _appColor.darkest,
+  ),
+  title3: TextStyle(
+    fontFamily: _headlineFamily,
+    fontSize: 20,
+    color: _appColor.darkest,
+  ),
+  subtitle1: TextStyle(
+    fontFamily: _bodyFamily,
+    fontSize: 24,
+    fontWeight: FontWeight.w500,
+    color: Colors.grey[800],
+  ),
+  body1: TextStyle(
+    fontFamily: _bodyFamily,
+    fontSize: 15,
+    fontWeight: FontWeight.w300,
+    color: Colors.grey[800],
+  ),
+  button1: TextStyle(
+    fontFamily: _bodyFamily,
+    fontSize: 16,
+    fontWeight: FontWeight.w600,
+    color: Colors.white,
+  ),
+  button2: TextStyle(
+    fontFamily: _bodyFamily,
+    fontSize: 14,
+    fontWeight: FontWeight.w600,
+    color: Colors.white,
+  ),
+);
+final _textTheme = TextTheme(bodyText1: _appText.body1);
+
+final _inputTheme = InputDecorationTheme(
+  floatingLabelBehavior: FloatingLabelBehavior.never,
+  filled: true,
+  fillColor: Colors.grey[200],
+  contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+  labelStyle: _appText.body1,
+  hintStyle: _appText.body1,
+  border: OutlineInputBorder(
+    borderRadius: BorderRadius.all(Radius.circular(10)),
+  ),
+);
+
+final _buttonShape = MaterialStateProperty.all(
+  RoundedRectangleBorder(
+    borderRadius: BorderRadius.all(Radius.circular(10)),
+  ),
+);
+final _filledButton = ButtonStyle(
+  backgroundColor: MaterialStateProperty.all(_appColor.medium),
+  overlayColor: MaterialStateProperty.all(Colors.grey[800]!.withOpacity(0.1)),
+  shape: _buttonShape,
+  foregroundColor: MaterialStateProperty.all(Colors.white),
+);
+final _appButton = AppButton(
+  largeFilled: _filledButton.copyWith(
+    textStyle: MaterialStateProperty.all(_appText.button1),
+    padding: MaterialStateProperty.all(
+      EdgeInsets.symmetric(horizontal: 25, vertical: 12),
+    ),
+  ),
+  filled: _filledButton.copyWith(
+    textStyle: MaterialStateProperty.all(_appText.button2),
+  ),
+  text: ButtonStyle(
+    textStyle: MaterialStateProperty.all(_appText.button1),
+    shape: _buttonShape,
+  ),
+);
+
+final theme = ThemeData(
+  extensions: [_appColor, _appText, _appButton],
+  colorScheme: _colorScheme,
+  primarySwatch: _primarySwatch,
+  shadowColor: _appColor.darkest,
+  textTheme: _textTheme,
+  inputDecorationTheme: _inputTheme,
+  textButtonTheme: TextButtonThemeData(style: _appButton.text),
+  outlinedButtonTheme: OutlinedButtonThemeData(style: _appButton.filled),
+);
+
+///////////////////////////////////////////////////////////////////////////
+/// CLASSES
+///////////////////////////////////////////////////////////////////////////
+
+@immutable
+class AppColors extends ThemeExtension<AppColors> {
+  final Color darkest;
+  final Color dark;
+  final Color medium;
+  const AppColors({
+    required this.darkest,
+    required this.dark,
+    required this.medium,
+  });
+
+  static AppColors of(BuildContext context) =>
+      Theme.of(context).extension<AppColors>()!;
+
+  /// Shouldn't be called
+  @override
+  AppColors copyWith() => this;
+
+  /// Shouldn't be called
+  @override
+  AppColors lerp(ThemeExtension<AppColors>? other, double t) => this;
+}
+
+@immutable
+class AppTexts extends ThemeExtension<AppTexts> {
+  final TextStyle kicker;
+  final TextStyle title1;
+  final TextStyle title2;
+  final TextStyle title3;
+  final TextStyle subtitle1;
+  final TextStyle body1;
+  final TextStyle button1;
+  final TextStyle button2;
+  const AppTexts({
+    required this.kicker,
+    required this.title1,
+    required this.title2,
+    required this.title3,
+    required this.subtitle1,
+    required this.body1,
+    required this.button1,
+    required this.button2,
+  });
+
+  static AppTexts of(BuildContext context) =>
+      Theme.of(context).extension<AppTexts>()!;
+
+  /// Shouldn't be called
+  @override
+  AppTexts copyWith() => this;
+
+  /// Shouldn't be called
+  @override
+  AppTexts lerp(ThemeExtension<AppTexts>? other, double t) => this;
+}
+
+@immutable
+class AppButton extends ThemeExtension<AppButton> {
+  final ButtonStyle text;
+  final ButtonStyle filled;
+  final ButtonStyle largeFilled;
+  const AppButton({
+    required this.text,
+    required this.filled,
+    required this.largeFilled,
+  });
+
+  static AppButton of(BuildContext context) =>
+      Theme.of(context).extension<AppButton>()!;
+
+  /// Shouldn't be called
+  @override
+  AppButton copyWith() => this;
+
+  /// Shouldn't be called
+  @override
+  AppButton lerp(ThemeExtension<AppButton>? other, double t) => this;
+}
+
+/////////////////////////////////////////////////////////////////////
+/// UTILS
+/////////////////////////////////////////////////////////////////////
+
+Map<int, Color> _createSwatch(Color color) {
+  final strengths = <double>[0.05];
+  final swatch = <int, Color>{};
+  final r = color.red, g = color.green, b = color.blue;
+  for (var i = 1, len = 9; i < len; i++) {
+    strengths.add(0.1 * i);
+  }
+  for (var strength in strengths) {
+    final ds = 0.5 - strength;
+    swatch[(strength * 1000).round()] = Color.fromRGBO(
+      r + ((ds < 0 ? r : (255 - r)) * ds).round(),
+      g + ((ds < 0 ? g : (255 - g)) * ds).round(),
+      b + ((ds < 0 ? b : (255 - b)) * ds).round(),
+      1,
+    );
+  }
+  return swatch;
+}
