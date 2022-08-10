@@ -36,7 +36,7 @@ class RouteConfig {
         _RouterConstants.initial: (context, state, data) => BeamPage(
               title: _title,
               key: ValueKey('initial-page'),
-              child: SignPage(), // TODO:
+              child: HomePage(), // TODO:
             ),
         _RouterConstants.login: (context, state, data) => BeamPage(
               title: 'Entrar - $_title',
@@ -81,5 +81,9 @@ class AppRouter {
 
   void pushUserPage(String uid) {
     Beamer.of(context).beamToNamed(_RouterConstants.user.withParam(uid));
+  }
+
+  void popDialog() {
+    Navigator.of(context).pop();
   }
 }

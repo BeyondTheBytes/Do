@@ -1,9 +1,129 @@
 import 'dart:collection';
+import 'dart:io';
 import 'dart:math';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:provider/provider.dart';
 
+import '../domain/structures.dart';
+import '../routes.dart';
+import 'button.dart';
 import 'theme.dart';
+
+class CustomDialog extends StatelessWidget {
+  final String title;
+  final Widget child;
+  const CustomDialog({required this.title, required this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(15),
+      ),
+      padding: EdgeInsets.all(30),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            title,
+            style: AppTexts.of(context).title2,
+          ),
+          SizedBox(height: 15),
+          child,
+        ],
+      ),
+    );
+  }
+}
+
+class IconErrorWidget extends StatelessWidget {
+  final String title;
+  final String description;
+  final Widget icon;
+
+  /// It's advised to use [HelpErrorButton]
+  final Widget? button;
+
+  const IconErrorWidget({
+    required this.title,
+    required this.description,
+    required this.icon,
+    this.button,
+  });
+
+  static const iconSize = 55.0;
+
+  @override
+  Widget build(BuildContext context) {
+    final localButton = button;
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 30, vertical: 8),
+      child: Container(
+        width: min(MediaQuery.of(context).size.width * 0.75, 400),
+        child: Column(
+          children: [
+            Container(height: iconSize, width: iconSize, child: icon),
+            SizedBox(height: 15),
+            Text(
+              title,
+              textAlign: TextAlign.center,
+              style: AppTexts.of(context).title3.copyWith(color: Colors.white),
+            ),
+            SizedBox(height: 3),
+            Text(
+              description,
+              textAlign: TextAlign.center,
+              style: AppTexts.of(context).body1.copyWith(color: Colors.white),
+            ),
+            if (localButton != null) ...[
+              SizedBox(height: 10),
+              localButton,
+            ]
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class ProfilePicture extends StatelessWidget {
+  final String? url;
+  const ProfilePicture({required this.url});
+
+  @override
+  Widget build(BuildContext context) {
+    final url = this.url;
+    return AspectRatio(
+      aspectRatio: 1,
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          shape: BoxShape.circle,
+          boxShadow: [BoxShadow()],
+          image: (url == null)
+              ? null
+              : DecorationImage(
+                  image: NetworkImage(url),
+                  fit: BoxFit.cover,
+                  alignment: Alignment.center,
+                ),
+        ),
+        child: (url == null)
+            ? Icon(
+                Icons.add_photo_alternate,
+                color: AppColors.of(context).darkest,
+              )
+            : null,
+        // TODO: add picture
+      ),
+    );
+  }
+}
 
 class DismissibleKeyboardWrapper extends StatelessWidget {
   final Widget child;
@@ -114,11 +234,151 @@ class CustomLoading extends StatelessWidget {
 }
 
 // /////////////////////////////////////////
+// DropDown
+// /////////////////////////////////////////
+
+class PlatformSelect<T> extends StatelessWidget {
+  final T? value;
+  final String hintText;
+  final List<T> items;
+  final Widget Function(BuildContext context, T value) itemBuilder;
+  final void Function(T? v) onChanged;
+  final double cupertinoItemExtent;
+  final double cupertinoDialogHeight;
+  const PlatformSelect({
+    required this.value,
+    required this.hintText,
+    required this.items,
+    required this.itemBuilder,
+    required this.onChanged,
+    this.cupertinoItemExtent = 30,
+    this.cupertinoDialogHeight = 270,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    if (Platform.isIOS) {
+      final value = this.value;
+      return CustomDropdownButton(
+        hintText: hintText,
+        selected: (value == null) ? null : itemBuilder(context, value),
+        onTap: () => showCupertinoSelect<void>(
+          context: context,
+          builder: (_) => Container(
+            height: cupertinoDialogHeight,
+            child: CupertinoPicker(
+              itemExtent: cupertinoItemExtent,
+              useMagnifier: false,
+              children:
+                  items.map((item) => itemBuilder(context, item)).toList(),
+              onSelectedItemChanged: (index) =>
+                  onChanged(index < 0 ? null : items[index]),
+            ),
+          ),
+        ),
+      );
+    }
+
+    return DropdownButtonFormField<T>(
+      hint: Text(
+        hintText,
+        style: Theme.of(context).inputDecorationTheme.hintStyle,
+      ),
+      dropdownColor: Colors.white,
+      value: value,
+      icon: _DropdownIcon(),
+      items: items
+          .map((item) => DropdownMenuItem<T>(
+                child: itemBuilder(context, item),
+                value: item,
+              ))
+          .toList(),
+      onChanged: onChanged,
+    );
+  }
+}
+
+class _DropdownIcon extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Icon(
+      FontAwesomeIcons.chevronDown,
+      size: 12,
+      color: Theme.of(context).inputDecorationTheme.iconColor,
+    );
+  }
+}
+
+class CustomDropdownButton extends StatelessWidget {
+  final Widget? selected;
+  final String hintText;
+  final void Function()? onTap;
+  const CustomDropdownButton({
+    required this.hintText,
+    required this.selected,
+    this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final selected = this.selected;
+    return GestureDetector(
+      child: Container(
+        height: 45,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            (selected == null)
+                ? Text(
+                    hintText,
+                    style: Theme.of(context).inputDecorationTheme.hintStyle,
+                  )
+                : DefaultTextStyle(
+                    child: selected,
+                    style: TextStyle(color: Colors.grey[900]),
+                  ),
+            _DropdownIcon(),
+          ],
+        ),
+        decoration: BoxDecoration(
+          color: Theme.of(context).inputDecorationTheme.fillColor,
+          borderRadius: BorderRadius.circular(10),
+        ),
+        padding: Theme.of(context).inputDecorationTheme.contentPadding,
+      ),
+      onTap: onTap,
+    );
+  }
+}
+
+Future<T?> showCupertinoSelect<T>({
+  required BuildContext context,
+  required Widget Function(BuildContext) builder,
+}) =>
+    showCupertinoModalPopup<T>(
+      context: context,
+      builder: (context) => CupertinoTheme(
+        data: CupertinoThemeData(
+          brightness: Brightness.light,
+        ),
+        child: CupertinoActionSheet(
+          actions: [builder(context)],
+          cancelButton: CupertinoButton(
+            child: Text('Fechar'),
+            onPressed: () => AppRouter.of(context).popDialog(),
+          ),
+        ),
+      ),
+    );
+
+// /////////////////////////////////////////
 // MESSAGE
 // /////////////////////////////////////////
 
 class ErrorMessage extends _DisplayMessage {
   ErrorMessage._(BuildContext context) : super(context);
+
+  final _waitAutomaticallyClose = Duration(milliseconds: 10000);
 
   static ErrorMessage of(BuildContext context) {
     return ErrorMessage._(context);
@@ -138,6 +398,8 @@ class ErrorMessage extends _DisplayMessage {
 
 class SuccessMessage extends _DisplayMessage {
   SuccessMessage._(BuildContext context) : super(context);
+
+  final _waitAutomaticallyClose = Duration(milliseconds: 4000);
 
   static SuccessMessage of(BuildContext context) {
     return SuccessMessage._(context);
@@ -160,7 +422,7 @@ abstract class _DisplayMessage {
   @protected
   _DisplayMessage(this.context);
 
-  static const _waitAutomaticallyClose = Duration(milliseconds: 10000);
+  Duration get _waitAutomaticallyClose;
 
   @protected
   Widget buildMessage(String message, {required Function() onPressedClose});

@@ -21,26 +21,38 @@ class EventsService {
     List<Sport> sports,
     GeoFirePoint userLocation, {
     required double radius,
+    required DateTime from,
   }) {
-    final ref = collection.where(
-      DataclassesDocFields.eventSport,
-      whereIn: sports.map(sportToStr).toList(),
-    );
-    return geo
-        .collectionWithConverter(collectionRef: ref)
-        .withinWithDistance(
-          center: userLocation,
-          radius: radius,
-          field: DataclassesDocFields.eventPoint,
-          strictMode: true,
-          geopointFrom: (event) => event.point.geoPoint,
+    final ref = collection
+        .where(
+          DataclassesDocFields.eventSport,
+          whereIn: sports.map(sportCode).toList(),
         )
-        .map((e) => e
-            .map((e) => Event(
-                  event: e.documentSnapshot.data()!,
-                  id: e.documentSnapshot.id,
-                ))
-            .toList());
+        .where(
+          DataclassesDocFields.eventDay,
+          isEqualTo: formatDate(from),
+        );
+    final databaseStream =
+        geo.collectionWithConverter(collectionRef: ref).withinWithDistance(
+              center: userLocation,
+              radius: radius,
+              field: DataclassesDocFields.eventPoint,
+              strictMode: true,
+              geopointFrom: (event) => event.point.geoPoint,
+            );
+
+    return databaseStream.map((events) {
+      return events
+          .map((event) => Event(
+                event: event.documentSnapshot.data()!,
+                id: event.documentSnapshot.id,
+              ))
+          .where(
+            (event) =>
+                event.date.compareTo(from.subtract(Duration(hours: 1))) >= 0,
+          )
+          .toList();
+    });
   }
 
   Stream<List<Event>> asCreator(String uid) => collection
@@ -61,7 +73,7 @@ class UserConfigService {
         toFirestore: (e, _) => e.toJson(),
       );
 
-  Stream<UserConfig> config(String uid) => collection
+  Stream<UserConfig> stream(String uid) => collection
       .doc(uid)
       .snapshots()
       .map((e) => e.data() ?? UserConfig.empty());

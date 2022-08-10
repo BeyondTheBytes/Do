@@ -29,13 +29,14 @@ final _bodyFamily = 'Inter';
 final _appText = AppTexts(
   kicker: TextStyle(
     fontFamily: _bodyFamily,
-    fontSize: 45,
+    fontSize: 20,
     fontStyle: FontStyle.italic,
+    fontWeight: FontWeight.w100,
     color: _appColor.darkest,
   ),
   title1: TextStyle(
     fontFamily: _headlineFamily,
-    fontSize: 72,
+    fontSize: 58,
     color: _appColor.darkest,
   ),
   title2: TextStyle(
@@ -58,7 +59,7 @@ final _appText = AppTexts(
     fontFamily: _bodyFamily,
     fontSize: 15,
     fontWeight: FontWeight.w300,
-    color: Colors.grey[800],
+    color: Colors.black,
   ),
   button1: TextStyle(
     fontFamily: _bodyFamily,
@@ -73,6 +74,12 @@ final _appText = AppTexts(
     color: Colors.white,
   ),
 );
+final _labelStyle = TextStyle(
+  fontFamily: _bodyFamily,
+  fontSize: 15,
+  fontWeight: FontWeight.w500,
+  color: Colors.grey[600],
+);
 final _textTheme = TextTheme(
   bodyText1: _appText.body1,
   subtitle1: _appText.body1, // input text theme
@@ -81,10 +88,13 @@ final _textTheme = TextTheme(
 final _inputTheme = InputDecorationTheme(
   floatingLabelBehavior: FloatingLabelBehavior.auto,
   filled: true,
+  iconColor: Colors.grey[800],
+  suffixIconColor: Colors.grey[800],
+  prefixIconColor: Colors.grey[800],
   fillColor: Colors.grey[200],
   contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-  labelStyle: _appText.body1,
-  hintStyle: _appText.body1,
+  labelStyle: _labelStyle,
+  hintStyle: _labelStyle,
   border: OutlineInputBorder(
     borderRadius: BorderRadius.all(Radius.circular(10)),
   ),

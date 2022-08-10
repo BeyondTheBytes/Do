@@ -1,4 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -11,6 +13,8 @@ class DataclassesDocFields {
   static const String eventCreatorUid = 'creatorUid';
   static const String eventSport = 'sport';
   static const String eventPoint = 'point';
+  static const String eventDate = 'date';
+  static const String eventDay = 'day';
 
   static const String userDescription = 'description';
   static const String userSports = 'sports';
@@ -34,7 +38,43 @@ enum Sport {
   addrenalineSport,
 }
 
-String sportToStr(Sport sport) => _$SportEnumMap[sport]!;
+const defaultSports = [Sport.soccer, Sport.basketball, Sport.tennis];
+String sportCode(Sport sport) => _$SportEnumMap[sport]!;
+String sportStr(Sport sport) {
+  switch (sport) {
+    case Sport.soccer:
+      return 'futebol';
+    case Sport.basketball:
+      return 'basquete';
+    case Sport.tennis:
+      return 'tênis';
+    case Sport.volleyball:
+      return 'vôlei';
+    case Sport.run:
+      return 'correr';
+    case Sport.addrenalineSport:
+      return 'adrenalina';
+  }
+}
+
+IconData sportIcon(Sport sport) {
+  switch (sport) {
+    case Sport.soccer:
+      return FontAwesomeIcons.futbol;
+    case Sport.basketball:
+      return FontAwesomeIcons.basketball;
+    case Sport.tennis:
+      return FontAwesomeIcons.baseball;
+    case Sport.volleyball:
+      return FontAwesomeIcons.volleyball;
+    case Sport.run:
+      return FontAwesomeIcons.shoePrints;
+    case Sport.addrenalineSport:
+      return Icons.skateboarding_rounded;
+  }
+}
+
+String formatDate(DateTime date) => '${date.year}/${date.month}/${date.day}';
 
 class Event extends EventData {
   final String id;
@@ -54,7 +94,11 @@ class Event extends EventData {
 
 @JsonSerializable()
 class EventData {
-  @JsonKey(fromJson: convertToDate, toJson: convertFromDate)
+  @JsonKey(
+    name: DataclassesDocFields.eventDate,
+    fromJson: convertToDate,
+    toJson: convertFromDate,
+  )
   final DateTime date;
   @JsonKey(name: DataclassesDocFields.eventSport)
   final Sport sport;
@@ -91,7 +135,10 @@ class EventData {
 
   factory EventData.fromJson(Map<String, dynamic> json) =>
       _$EventDataFromJson(json);
-  Map<String, dynamic> toJson() => _$EventDataToJson(this);
+  Map<String, dynamic> toJson() => <String, Object?>{
+        ..._$EventDataToJson(this),
+        DataclassesDocFields.eventDay: formatDate(date),
+      };
 }
 
 @JsonSerializable()
@@ -107,9 +154,9 @@ class UserConfig {
     required List<Sport>? sports,
     required this.phone,
   })  : description = description ?? '',
-        sports = sports ?? [];
+        sports = sports ?? defaultSports;
   UserConfig.empty()
-      : sports = [],
+      : sports = defaultSports,
         phone = null,
         description = '';
 

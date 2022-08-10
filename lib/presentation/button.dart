@@ -14,6 +14,7 @@ class CustomButton extends StatefulWidget {
   final bool loadingText;
   final bool whiteLoading;
   final bool filled;
+  final bool stretch;
   CustomButton({
     required this.child,
     required this.onPressed,
@@ -21,6 +22,7 @@ class CustomButton extends StatefulWidget {
     this.loadingText = true,
     this.filled = true,
     this.whiteLoading = true,
+    this.stretch = true,
   });
 
   @override
@@ -36,6 +38,8 @@ class _CustomButtonState extends State<CustomButton> {
       onPressed: _buildOnPressed(),
       style: widget.style,
       child: Row(
+        mainAxisSize: widget.stretch ? MainAxisSize.max : MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           if (!_processingTap || widget.loadingText) widget.child,
           if (_processingTap)
