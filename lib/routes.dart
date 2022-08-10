@@ -74,7 +74,12 @@ class AppRouter {
     Beamer.of(context).beamToNamed(_RouterConstants.login);
   }
 
-  void navigateUserPage(String uid) {
+  void navigateLogged() {
+    Beamer.of(context)
+        .beamToReplacementNamed(_RouterConstants.home, stacked: false);
+  }
+
+  void pushUserPage(String uid) {
     Beamer.of(context).beamToNamed(_RouterConstants.user.withParam(uid));
   }
 }

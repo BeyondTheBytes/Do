@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -10,8 +11,10 @@ class DataclassesDocFields {
   static const String eventCreatorUid = 'creatorUid';
   static const String eventSport = 'sport';
   static const String eventPoint = 'point';
+
   static const String userDescription = 'description';
   static const String userSports = 'sports';
+  static const String userPhone = 'phone';
 }
 
 enum EventRelation { participant, creator, none }
@@ -97,6 +100,7 @@ class UserConfig {
   final String description;
   @JsonKey(name: DataclassesDocFields.userSports)
   final List<Sport> sports;
+  @JsonKey(name: DataclassesDocFields.userPhone)
   final String? phone;
   UserConfig({
     required String? description,

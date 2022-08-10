@@ -4,6 +4,7 @@ final _appColor = AppColors(
   darkest: Color(0xff202233),
   dark: Color(0xff161E5D),
   medium: Color(0xff4657D5),
+  warning: Color(0xffFFF044),
 );
 final _colorScheme = ColorScheme(
   brightness: Brightness.dark,
@@ -72,10 +73,13 @@ final _appText = AppTexts(
     color: Colors.white,
   ),
 );
-final _textTheme = TextTheme(bodyText1: _appText.body1);
+final _textTheme = TextTheme(
+  bodyText1: _appText.body1,
+  subtitle1: _appText.body1, // input text theme
+);
 
 final _inputTheme = InputDecorationTheme(
-  floatingLabelBehavior: FloatingLabelBehavior.never,
+  floatingLabelBehavior: FloatingLabelBehavior.auto,
   filled: true,
   fillColor: Colors.grey[200],
   contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
@@ -133,10 +137,12 @@ class AppColors extends ThemeExtension<AppColors> {
   final Color darkest;
   final Color dark;
   final Color medium;
+  final Color warning;
   const AppColors({
     required this.darkest,
     required this.dark,
     required this.medium,
+    required this.warning,
   });
 
   static AppColors of(BuildContext context) =>

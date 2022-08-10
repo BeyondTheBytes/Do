@@ -11,8 +11,6 @@ class EventsService {
 
   static String _participateField(String uid) =>
       '${DataclassesDocFields.eventParticipants}.$uid';
-  static Event _parseSavedEvent(QueryDocumentSnapshot<EventData> e) =>
-      Event(event: e.data(), id: e.id);
 
   Future<void> create(EventData event) => collection.doc().set(event);
   Future<void> participate(String eventId, String uid) =>
@@ -75,6 +73,11 @@ class UserConfigService {
   Future<void> setInterests(String uid, {required List<Sport> interests}) =>
       mapCollection.doc(uid).set(
         {DataclassesDocFields.userSports: interests},
+        SetOptions(merge: true),
+      );
+  Future<void> setPhone(String uid, {required String phone}) =>
+      mapCollection.doc(uid).set(
+        {DataclassesDocFields.userPhone: phone},
         SetOptions(merge: true),
       );
 }
