@@ -9,7 +9,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
 
 import '../domain/structures.dart';
-import '../routes.dart';
+import '../config/routes.dart';
 import 'button.dart';
 import 'theme.dart';
 

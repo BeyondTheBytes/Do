@@ -8,7 +8,7 @@ import '../../domain/utils.dart';
 import '../../presentation/button.dart';
 import '../../presentation/theme.dart';
 import '../../presentation/utils.dart';
-import '../../routes.dart';
+import '../../config/routes.dart';
 import 'service.dart';
 import 'utils.dart';
 

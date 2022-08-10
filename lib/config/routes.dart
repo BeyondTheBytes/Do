@@ -2,10 +2,10 @@ import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'features/auth/pages.dart';
-import 'features/home/page.dart';
-import 'features/user/page.dart';
-import 'presentation/pages.dart';
+import '../features/auth/pages.dart';
+import '../features/home/page.dart';
+import '../features/user/page.dart';
+import '../presentation/pages.dart';
 
 /// DEFINITIONS
 
