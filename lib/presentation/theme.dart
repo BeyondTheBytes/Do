@@ -5,6 +5,7 @@ final _appColor = AppColors(
   dark: Color(0xff161E5D),
   medium: Color(0xff4657D5),
   warning: Color(0xffFFF044),
+  success: Color(0xff3CA921),
 );
 final _colorScheme = ColorScheme(
   brightness: Brightness.dark,
@@ -46,7 +47,7 @@ final _appText = AppTexts(
   ),
   title3: TextStyle(
     fontFamily: _headlineFamily,
-    fontSize: 20,
+    fontSize: 24,
     color: _appColor.darkest,
   ),
   subtitle1: TextStyle(
@@ -111,6 +112,12 @@ final _filledButton = ButtonStyle(
   shape: _buttonShape,
   foregroundColor: MaterialStateProperty.all(Colors.white),
 );
+final _outlinedButton = ButtonStyle(
+  backgroundColor: MaterialStateProperty.all(Colors.white),
+  overlayColor: MaterialStateProperty.all(_appColor.dark.withOpacity(0.1)),
+  shape: _buttonShape,
+  foregroundColor: MaterialStateProperty.all(_appColor.medium),
+);
 final _appButton = AppButton(
   largeFilled: _filledButton.copyWith(
     textStyle: MaterialStateProperty.all(_appText.button1),
@@ -119,6 +126,15 @@ final _appButton = AppButton(
     ),
   ),
   filled: _filledButton.copyWith(
+    textStyle: MaterialStateProperty.all(_appText.button2),
+  ),
+  largeOutlined: _outlinedButton.copyWith(
+    textStyle: MaterialStateProperty.all(_appText.button1),
+    padding: MaterialStateProperty.all(
+      EdgeInsets.symmetric(horizontal: 25, vertical: 12),
+    ),
+  ),
+  outlined: _outlinedButton.copyWith(
     textStyle: MaterialStateProperty.all(_appText.button2),
   ),
   text: ButtonStyle(
@@ -148,11 +164,13 @@ class AppColors extends ThemeExtension<AppColors> {
   final Color dark;
   final Color medium;
   final Color warning;
+  final Color success;
   const AppColors({
     required this.darkest,
     required this.dark,
     required this.medium,
     required this.warning,
+    required this.success,
   });
 
   static AppColors of(BuildContext context) =>
@@ -205,10 +223,14 @@ class AppButton extends ThemeExtension<AppButton> {
   final ButtonStyle text;
   final ButtonStyle filled;
   final ButtonStyle largeFilled;
+  final ButtonStyle outlined;
+  final ButtonStyle largeOutlined;
   const AppButton({
     required this.text,
     required this.filled,
     required this.largeFilled,
+    required this.outlined,
+    required this.largeOutlined,
   });
 
   static AppButton of(BuildContext context) =>

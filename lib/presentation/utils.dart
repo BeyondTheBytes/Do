@@ -23,10 +23,32 @@ class EntryController {
   }
 }
 
+class DialogWrapper extends StatelessWidget {
+  final Widget child;
+  const DialogWrapper({required this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      insetPadding: EdgeInsets.all(20.0),
+      child: Container(
+        width: MediaQuery.of(context).size.width * 0.8,
+        constraints: BoxConstraints(maxWidth: 500),
+        child: SingleChildScrollView(child: child),
+      ),
+    );
+  }
+}
+
 class CustomDialog extends StatelessWidget {
   final String title;
   final Widget child;
-  const CustomDialog({required this.title, required this.child});
+  final bool large;
+  const CustomDialog({
+    required this.title,
+    required this.child,
+    this.large = true,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -35,15 +57,18 @@ class CustomDialog extends StatelessWidget {
         color: Colors.white,
         borderRadius: BorderRadius.circular(15),
       ),
-      padding: EdgeInsets.all(30),
+      padding: large ? EdgeInsets.all(30) : EdgeInsets.all(20),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
             title,
-            style: AppTexts.of(context).title2,
+            textAlign: TextAlign.center,
+            style: large
+                ? AppTexts.of(context).title2
+                : AppTexts.of(context).title3,
           ),
-          SizedBox(height: 15),
+          large ? SizedBox(height: 15) : SizedBox(height: 10),
           child,
         ],
       ),

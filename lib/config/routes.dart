@@ -83,7 +83,7 @@ class AppRouter {
     Beamer.of(context).beamToNamed(_RouterConstants.user.withParam(uid));
   }
 
-  void popDialog() {
-    Navigator.of(context).pop();
+  void popDialog<T extends Object?>([T? param]) {
+    Navigator.of(context).pop(param);
   }
 }

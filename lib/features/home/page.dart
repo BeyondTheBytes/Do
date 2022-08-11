@@ -14,6 +14,7 @@ import '../../presentation/theme.dart';
 import '../../presentation/utils.dart';
 import '../user/sports.dart';
 import '../utils/location.dart';
+import '../../domain/utils.dart';
 import 'create_event.dart';
 
 // TODO: add editable
@@ -112,10 +113,12 @@ class HomePage extends StatelessWidget {
               child: SportTags(sports: sports),
             )),
           ),
-          SliverToBoxAdapter(child: SizedBox(height: 20)),
-          ...(events ?? []).map(
-            (e) => SliverToBoxAdapter(child: EventHorizontalCard(event: e)),
-          ),
+          SliverToBoxAdapter(child: SizedBox(height: 60)),
+          ...(events ?? [])
+              .map((e) => SliverToBoxAdapter(
+                    child: _padding(EventHorizontalCard(event: e)),
+                  ))
+              .withBetween(SliverToBoxAdapter(child: SizedBox(height: 30))),
         ],
         if (locationFailure != null)
           SliverToBoxAdapter(

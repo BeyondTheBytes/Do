@@ -13,8 +13,11 @@ class EventsService {
       '${DataclassesDocFields.eventParticipants}.$uid';
 
   Future<void> create(EventData event) => collection.doc().set(event);
+  Future<void> delete(String id) => collection.doc(id).delete();
   Future<void> participate(String eventId, String uid) =>
       collection.doc(eventId).update({_participateField(uid): true});
+  Future<void> unparticipate(String eventId, String uid) =>
+      collection.doc(eventId).update({_participateField(uid): null});
 
   final geo = Geoflutterfire();
   Stream<List<Event>> nearby(
@@ -52,7 +55,7 @@ class EventsService {
                 event.date.compareTo(from.subtract(Duration(hours: 1))) >= 0,
           )
           .toList();
-    });
+    }).handleError((dynamic e) => print('xxx $e'));
   }
 
   Stream<List<Event>> asCreator(String uid) => collection

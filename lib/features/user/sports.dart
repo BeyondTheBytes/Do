@@ -22,7 +22,6 @@ class SportTags extends StatelessWidget {
             shape: BoxShape.circle,
             border: Border.all(color: AppColors.of(context).medium, width: 2),
           ),
-          padding: EdgeInsets.all(0.5),
           child: Icon(Icons.add_rounded, color: AppColors.of(context).medium),
         ),
       ].withBetween(SizedBox(width: 8)),
@@ -35,7 +34,7 @@ class SportTags extends StatelessWidget {
         color: AppColors.of(context).medium,
         borderRadius: BorderRadius.circular(200),
       ),
-      padding: EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+      padding: EdgeInsets.symmetric(horizontal: 14, vertical: 5),
       child: Text(
         sportStr(sport),
         style: AppTexts.of(context).body1.copyWith(color: Colors.white),

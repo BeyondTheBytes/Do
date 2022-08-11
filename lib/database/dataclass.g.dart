@@ -11,7 +11,7 @@ EventData _$EventDataFromJson(Map<String, dynamic> json) => EventData(
       date: convertToDate(json['date'] as Timestamp),
       placeId: json['placeId'] as String,
       placeDescription: json['placeDescription'] as String,
-      observations: json['observations'] as String?,
+      observations: json['observations'] as String,
       creatorUid: json['creatorUid'] as String,
       photoUrl: json['photoUrl'] as String,
       point: convertToPoint(json['point'] as Map<String, Object?>),

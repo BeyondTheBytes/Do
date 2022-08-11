@@ -114,12 +114,14 @@ class EventData {
   final String placeId;
   final String placeDescription;
   final String photoUrl;
-  final String? observations;
+  final String observations;
 
   @JsonKey(name: DataclassesDocFields.eventCreatorUid)
   final String creatorUid;
   @JsonKey(name: DataclassesDocFields.eventParticipants)
   final Map<String, bool> participants;
+
+  List<String> get getParticipants => participants.keys.toList();
 
   EventData({
     required this.sport,
