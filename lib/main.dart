@@ -17,6 +17,7 @@ void main() async {
   await Future.wait([
     Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform),
     Env.load(),
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]),
   ]);
   runApp(App());
 }

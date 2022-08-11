@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -95,9 +96,6 @@ class EventHorizontalCard extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        // Stack(
-        //   children: [],
-        // ),
         SizedBox(width: 5),
         GestureDetector(
           onTap: () => _updateStatus(context, relation),
@@ -219,21 +217,11 @@ class EventHorizontalCard extends StatelessWidget {
         }
         break;
       case EventRelation.none:
-        final result = await showDialog<bool>(
-          context: context,
-          builder: (context) => _ConfirmationDialog(
-            title: 'Quer participar do encontro?',
-            description: 'Não esqueça de verificar seu calendário :)',
-            positiveAnswer: 'Sim',
-            negativeAnswer: 'Cancelar',
-          ),
+        HapticFeedback.heavyImpact();
+        await events.participate(
+          event.id,
+          context.read<UserCredential?>()!.user!.uid,
         );
-        if (result == true) {
-          await events.participate(
-            event.id,
-            context.read<UserCredential?>()!.user!.uid,
-          );
-        }
     }
   }
 }

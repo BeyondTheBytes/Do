@@ -1,4 +1,8 @@
+import 'dart:io';
+
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../../domain/structures.dart';
 
@@ -76,6 +80,16 @@ class EmailAuthService {
     } on FirebaseAuthException catch (e) {
       return Either.failure(Failure(e.portugueseMessage));
     }
+  }
+}
+
+class UserAuthService {
+  Future<void> setProfilePicture(String uid, File file) async {
+    final ref = FirebaseStorage.instance.ref().child('profiles/$uid');
+    ref.putFile(file).asStream();
+
+    final user = await FirebaseAuth.instance.currentUser;
+    user!.updatePhotoURL(ref.fullPath);
   }
 }
 

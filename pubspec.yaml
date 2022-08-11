@@ -32,6 +32,8 @@ dependencies:
   auto_size_text: ^3.0.0
   mask_text_input_formatter: ^2.4.0
   flutter_dotenv: ^5.0.2
+  image_picker: ^0.8.5+3
+  firebase_storage: ^10.3.4
 
 dev_dependencies:
   flutter_test:

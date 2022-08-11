@@ -146,7 +146,7 @@ class ProfilePicture extends StatelessWidget {
       aspectRatio: 1,
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: url == null ? Colors.white : null,
           shape: BoxShape.circle,
           boxShadow: [BoxShadow()],
           image: (url == null)

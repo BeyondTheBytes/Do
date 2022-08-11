@@ -1,9 +1,12 @@
+import 'dart:io';
 import 'dart:math';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 import '../../database/dataclass.dart';
@@ -12,11 +15,12 @@ import '../../domain/structures.dart';
 import '../../presentation/event.dart';
 import '../../presentation/theme.dart';
 import '../../presentation/utils.dart';
+import '../auth/service.dart';
 import '../user/sports.dart';
 import '../utils/location.dart';
 import 'create_event.dart';
 
-// TODO: add editable
+// TODO: let user edit radius
 const _radius = 40.0;
 
 class HomePage extends StatelessWidget {
@@ -73,18 +77,12 @@ class HomePage extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Row(
-                      children: [
-                        Text(
-                          '${_radius.round()}km, hoje  ',
-                          style: AppTexts.of(context).kicker.copyWith(
-                                color: Colors.white,
-                                fontSize: 22,
-                              ),
-                        ),
-                        // TODO: add editable
-                        // Icon(FontAwesomeIcons.penToSquare, size: 15),
-                      ],
+                    Text(
+                      '${_radius.round()}km, hoje  ',
+                      style: AppTexts.of(context).kicker.copyWith(
+                            color: Colors.white,
+                            fontSize: 22,
+                          ),
                     ),
                     Text(
                       'Do.',
@@ -97,9 +95,16 @@ class HomePage extends StatelessWidget {
                 Container(
                   width: 70,
                   height: 70,
-                  child: ProfilePicture(
-                    url: context.watch<UserCredential?>()!.user!.photoURL,
-                  ),
+                  child: Builder(builder: (context) {
+                    final photoUrl =
+                        context.watch<UserCredential?>()!.user!.photoURL;
+                    return GestureDetector(
+                      onTap: photoUrl == null
+                          ? () => _addProfilePic(context)
+                          : () => _showNavigation(context),
+                      child: ProfilePicture(url: photoUrl),
+                    );
+                  }),
                 ),
               ],
             ),
@@ -151,6 +156,19 @@ class HomePage extends StatelessWidget {
 
   Widget _padding(Widget child) =>
       Padding(padding: EdgeInsets.symmetric(horizontal: 30), child: child);
+
+  Future<void> _addProfilePic(BuildContext context) async {
+    final image = await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (image == null) return null;
+
+    final authService = UserAuthService();
+    final uid = context.read<UserCredential?>()!.user!.uid;
+    await authService.setProfilePicture(uid, File(image.path));
+  }
+
+  void _showNavigation(BuildContext context) {
+    // TODO:
+  }
 }
 
 class _HomeWrapper extends StatefulWidget {
