@@ -8,8 +8,8 @@ publish_to: 'none'
 version: 1.0.0+1
 
 flutter_native_splash:
-  color: "#00C966"
-  image: "assets/splash.png"
+  color: "#202233"
+  image: "assets/config/splash.png"
 
 flutter_icons:
   android: true
@@ -58,6 +58,7 @@ dev_dependencies:
   freezed: ^2.1.0+1
   mocktail: ^0.3.0
   flutter_launcher_icons: ^0.10.0
+  flutter_native_splash: ^2.2.7
 
 flutter:
   uses-material-design: true
