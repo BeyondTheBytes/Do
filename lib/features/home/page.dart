@@ -14,7 +14,6 @@ import '../../presentation/theme.dart';
 import '../../presentation/utils.dart';
 import '../user/sports.dart';
 import '../utils/location.dart';
-import '../../domain/utils.dart';
 import 'create_event.dart';
 
 // TODO: add editable

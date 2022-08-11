@@ -87,7 +87,7 @@ class UserConfigService {
       );
   Future<void> setInterests(String uid, {required List<Sport> interests}) =>
       mapCollection.doc(uid).set(
-        {DataclassesDocFields.userSports: interests},
+        {DataclassesDocFields.userSports: interests.map(sportCode).toList()},
         SetOptions(merge: true),
       );
   Future<void> setPhone(String uid, {required String phone}) =>

@@ -3,12 +3,11 @@ import 'dart:async';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 
+import '../../config/routes.dart';
 import '../../database/services.dart';
-import '../../domain/utils.dart';
 import '../../presentation/button.dart';
 import '../../presentation/theme.dart';
 import '../../presentation/utils.dart';
-import '../../config/routes.dart';
 import 'service.dart';
 import 'utils.dart';
 
