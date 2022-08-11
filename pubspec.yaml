@@ -7,6 +7,20 @@ publish_to: 'none'
 
 version: 1.0.0+1
 
+flutter_native_splash:
+  color: "#00C966"
+  image: "assets/splash.png"
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/config/icon.png"
+  web:
+    generate: true
+    image_path: "assets/config/icon.png"
+    background_color: "#202233"
+    theme_color: "#4657D5"
+
 environment:
   sdk: ">=2.17.6 <3.0.0"
 
@@ -43,6 +57,7 @@ dev_dependencies:
   effective_dart: ^1.3.2
   freezed: ^2.1.0+1
   mocktail: ^0.3.0
+  flutter_launcher_icons: ^0.10.0
 
 flutter:
   uses-material-design: true
