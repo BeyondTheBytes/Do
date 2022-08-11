@@ -5,13 +5,23 @@ import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:provider/provider.dart';
 
-import '../domain/structures.dart';
 import '../config/routes.dart';
-import 'button.dart';
 import 'theme.dart';
+
+class EntryController {
+  OverlayEntry? entry = null;
+
+  void remove() {
+    entry?.remove();
+    entry = null;
+  }
+
+  void insert(BuildContext context, OverlayEntry newEntry) {
+    entry = newEntry;
+    Overlay.of(context)!.insert(newEntry);
+  }
+}
 
 class CustomDialog extends StatelessWidget {
   final String title;
@@ -262,20 +272,25 @@ class PlatformSelect<T> extends StatelessWidget {
       return CustomDropdownButton(
         hintText: hintText,
         selected: (value == null) ? null : itemBuilder(context, value),
-        onTap: () => showCupertinoSelect<void>(
-          context: context,
-          builder: (_) => Container(
-            height: cupertinoDialogHeight,
-            child: CupertinoPicker(
-              itemExtent: cupertinoItemExtent,
-              useMagnifier: false,
-              children:
-                  items.map((item) => itemBuilder(context, item)).toList(),
-              onSelectedItemChanged: (index) =>
-                  onChanged(index < 0 ? null : items[index]),
+        onTap: () {
+          onChanged(items.first); // so that the user doesn't have to move
+          // "back and forth" if they want to select the first one
+
+          showCupertinoSelect<void>(
+            context: context,
+            builder: (_) => Container(
+              height: cupertinoDialogHeight,
+              child: CupertinoPicker(
+                itemExtent: cupertinoItemExtent,
+                useMagnifier: false,
+                children:
+                    items.map((item) => itemBuilder(context, item)).toList(),
+                onSelectedItemChanged: (index) =>
+                    onChanged(index < 0 ? null : items[index]),
+              ),
             ),
-          ),
-        ),
+          );
+        },
       );
     }
 
@@ -364,7 +379,7 @@ Future<T?> showCupertinoSelect<T>({
         child: CupertinoActionSheet(
           actions: [builder(context)],
           cancelButton: CupertinoButton(
-            child: Text('Fechar'),
+            child: Text('Confirmar'),
             onPressed: () => AppRouter.of(context).popDialog(),
           ),
         ),

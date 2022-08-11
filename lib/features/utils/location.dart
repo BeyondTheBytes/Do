@@ -58,8 +58,8 @@ class LocationWrapper extends StatelessWidget {
     // TODO:
     return Provider<LocationResult>(
       create: (_) => Either.success(Position(
-        latitude: 0,
-        longitude: 0,
+        latitude: -22.932924,
+        longitude: -47.073845,
         accuracy: 0,
         altitude: 0,
         heading: 0,

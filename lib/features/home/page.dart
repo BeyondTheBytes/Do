@@ -58,7 +58,7 @@ class HomePage extends StatelessWidget {
     List<Event>? events,
     Failure? locationFailure,
   ) {
-    const errorPadding = EdgeInsets.only(top: 40);
+    const errorPadding = EdgeInsets.only(top: 60);
     return CustomScrollView(
       slivers: [
         SliverToBoxAdapter(
@@ -165,6 +165,8 @@ class _HomeWrapper extends StatefulWidget {
 class _HomeWrapperState extends State<_HomeWrapper> {
   var _openned = false;
 
+  final entryController = EntryController();
+
   @override
   Widget build(BuildContext context) {
     return DismissibleKeyboardWrapper(
@@ -188,6 +190,7 @@ class _HomeWrapperState extends State<_HomeWrapper> {
                 child: Align(
                   alignment: Alignment.bottomCenter,
                   child: CreateEventDialog(
+                    entryController: entryController,
                     onAdd: () {
                       setState(() {
                         _openned = false;
@@ -203,6 +206,7 @@ class _HomeWrapperState extends State<_HomeWrapper> {
         floatingActionButton: _FloatingActionButton(
           openned: _openned,
           onTap: (context) {
+            if (_openned) entryController.remove();
             setState(() {
               _openned = !_openned;
             });
