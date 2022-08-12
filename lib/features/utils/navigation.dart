@@ -1,16 +1,15 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tinycolor2/tinycolor2.dart';
 
 import '../../config/constants.dart';
+import '../../config/routes.dart';
+import '../../presentation/button.dart';
 import '../../presentation/theme.dart';
 import '../../presentation/utils.dart';
+import '../auth/service.dart';
 
 enum NavigationPage { home, profile }
-
-int _indexOfPage(NavigationPage page) => NavigationPage.values.indexOf(page);
 
 final navigationController = _NavigationPageController();
 
@@ -61,12 +60,9 @@ class NavigationWrapper extends StatefulWidget {
 
 class _NavigationWrapperState extends State<NavigationWrapper> {
   var _selectedPage = NavigationPage.home;
-  int get _selectedPageIndex => _indexOfPage(_selectedPage);
 
   static const _pageVerticalDelta = 25.0;
   static const _pageHorizontalDelta = 270.0;
-  static const _percPageVisible = .60;
-  static const _percMenuVisible = .50;
 
   Color _backgroundColor(BuildContext context) =>
       AppColors.of(context).darkest.darken(5);
@@ -95,13 +91,16 @@ class _NavigationWrapperState extends State<NavigationWrapper> {
   }
 
   Widget _buildContent(BuildContext context, double percMenu) {
+    final infoTop = MediaQuery.of(context).padding.top + 25;
     return Scaffold(
       backgroundColor: _backgroundColor(context),
       body: Stack(children: [
         Positioned(
-          top: MediaQuery.of(context).padding.top + 25,
-          child: Opacity(
-            opacity: max(percMenu - _percMenuVisible, 0) / _percMenuVisible,
+          top: infoTop,
+          child: Container(
+            height: MediaQuery.of(context).size.height -
+                infoTop -
+                MediaQuery.of(context).padding.bottom,
             child: _buildNavigation(context),
           ),
         ),
@@ -196,6 +195,26 @@ class _NavigationWrapperState extends State<NavigationWrapper> {
                 }
               }).withBetween(SizedBox(height: 10)),
             ],
+          ),
+        ),
+        Expanded(child: Container()),
+        Container(
+          padding: const EdgeInsets.only(left: pageHorizontalPadding),
+          width: 300,
+          child: CustomButton(
+            child: Text('Sair'),
+            style: AppButton.of(context).largeFilled.copyWith(
+                  backgroundColor: MaterialStateProperty.all(
+                    AppColors.of(context).darkest,
+                  ),
+                  foregroundColor: MaterialStateProperty.all(
+                    Colors.white,
+                  ),
+                ),
+            onPressed: () {
+              AppRouter.of(context).navigateLoggedOut();
+              UserAuthService().signOut();
+            },
           ),
         ),
       ],
