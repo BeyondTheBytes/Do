@@ -242,21 +242,23 @@ class _LocalSearch extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final locationResult = context.watch<LocationResult>();
-    final selected = this.selected;
-    return locationResult.when(
-      failure: (failure) => LocationPermissionCard(failure: failure),
-      success: (location) {
-        final text = (selected == null)
-            ? null
-            : selected.structuredFormatting!.mainText!;
-        return TextField(
-          controller: TextEditingController(text: text),
-          decoration: InputDecoration(hintText: 'Local'),
-          onChanged: (v) => onChanged(context, v, location),
-        );
-      },
-    );
+    return LocationWrapper(builder: (context, locationResult) {
+      final selected = this.selected;
+
+      final failure = locationResult?.failureOrNull;
+      if (failure != null) return LocationPermissionCard(failure: failure);
+
+      final location = locationResult?.successOrNull;
+      final text =
+          (selected == null) ? null : selected.structuredFormatting!.mainText!;
+      return TextField(
+        controller: TextEditingController(text: text),
+        decoration: InputDecoration(hintText: 'Local'),
+        onChanged:
+            location == null ? null : (v) => onChanged(context, v, location),
+        enabled: locationResult != null,
+      );
+    });
   }
 
   void onChanged(BuildContext context, String value, Position location) async {

@@ -4,7 +4,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:json_annotation/json_annotation.dart';
 
-import '../domain/parse.dart';
+import '../domain/utils.dart';
 
 part 'dataclass.g.dart';
 

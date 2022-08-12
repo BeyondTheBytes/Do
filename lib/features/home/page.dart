@@ -27,29 +27,28 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _HomeWrapper(
-      body: StreamBuilder<UserConfig>(
-          stream: userConfig.stream(AppState.auth.currentUser!.uid),
-          builder: (context, snapshot) {
-            final userConfig = snapshot.data;
-            final sports = userConfig?.sports;
-
-            final locationResult = context.watch<LocationResult>();
-            final location = locationResult.successOrNull;
-
-            return StreamBuilder<List<Event>>(
-              stream: (sports == null || location == null)
-                  ? null
-                  : events.nearby(
-                      sports,
-                      GeoFirePoint(location.latitude, location.longitude),
-                      radius: _radius,
-                      from: DateTime.now(),
-                    ),
-              builder: (context, snapshot) => _buildPage(
-                  context, sports, snapshot.data, locationResult.failureOrNull),
-            );
-          }),
+    return LocationWrapper(
+      builder: (context, locationResult) => _HomeWrapper(
+        body: StreamBuilder<UserConfig>(
+            stream: userConfig.stream(AppState.auth.currentUser!.uid),
+            builder: (context, snapshot) {
+              final userConfig = snapshot.data;
+              final sports = userConfig?.sports;
+              final location = locationResult?.successOrNull;
+              return StreamBuilder<List<Event>>(
+                stream: (sports == null || location == null)
+                    ? null
+                    : events.nearby(
+                        sports,
+                        GeoFirePoint(location.latitude, location.longitude),
+                        radius: _radius,
+                        from: DateTime.now(),
+                      ),
+                builder: (context, snapshot) => _buildPage(context, sports,
+                    snapshot.data, locationResult?.failureOrNull),
+              );
+            }),
+      ),
     );
   }
 

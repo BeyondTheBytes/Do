@@ -26,16 +26,14 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return LocationWrapper(
-      builder: (context) => MaterialApp.router(
-        title: 'Do.',
-        theme: theme,
-        color: theme.colorScheme.primary,
-        // route
-        routeInformationParser: routeConfig.routeInformationParser,
-        routerDelegate: routeConfig.routerDelegate,
-        backButtonDispatcher: routeConfig.backButtonDispatcher,
-      ),
+    return MaterialApp.router(
+      title: 'Do.',
+      theme: theme,
+      color: theme.colorScheme.primary,
+      // route
+      routeInformationParser: routeConfig.routeInformationParser,
+      routerDelegate: routeConfig.routerDelegate,
+      backButtonDispatcher: routeConfig.backButtonDispatcher,
     );
   }
 }

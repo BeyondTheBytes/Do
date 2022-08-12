@@ -1,12 +1,17 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:provider/provider.dart';
 
 import '../../domain/structures.dart';
+import '../../domain/utils.dart';
 import '../../presentation/button.dart';
 import '../../presentation/theme.dart';
 import '../../presentation/utils.dart';
+
+const minMetersDistanceUpdate = 100;
 
 class LocationPermissionCard extends StatelessWidget {
   final Failure failure;
@@ -47,29 +52,60 @@ class LocationPermissionCard extends StatelessWidget {
   }
 }
 
-typedef LocationResult = Either<Position, Failure>;
+typedef LocationResult = Either<Position, Failure>?;
 
-class LocationWrapper extends StatelessWidget {
-  final Widget Function(BuildContext context) builder;
-  const LocationWrapper({required this.builder});
+class LocationWrapper extends StatefulWidget {
+  final Widget Function(BuildContext context, LocationResult info) builder;
+  LocationWrapper({required this.builder});
+
+  @override
+  State<LocationWrapper> createState() => _LocationWrapperState();
+}
+
+class _LocationWrapperState extends State<LocationWrapper> {
+  static Position? _lastCapturedPosition;
+  LocationResult? _current;
+  late final subscription =
+      Geolocator.getPositionStream().listen(_updatePosition, onError: _onError);
+
+  @override
+  void initState() {
+    _updatePosition(_lastCapturedPosition);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    subscription.cancel();
+    super.dispose();
+  }
+
+  void _updatePosition(Position? newPosition) {
+    if (newPosition == null) return;
+
+    final lastPosition = _current?.successOrNull;
+    if (lastPosition == null ||
+        DistanceBetween.inMeters(newPosition, lastPosition) >
+            minMetersDistanceUpdate) {
+      _lastCapturedPosition = newPosition;
+      setState(() {
+        _current = Either.success(newPosition);
+      });
+    }
+  }
+
+  void _onError(Object? error) {
+    setState(() {
+      _current = Either.failure(
+        Failure(
+          """Não conseguimos obter sua localização. Por favor, cheque as permissões do aplicativo.""",
+        ),
+      );
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    // TODO:
-    return Provider<LocationResult>(
-      create: (_) => Either.success(Position(
-        latitude: -22.932924,
-        longitude: -47.073845,
-        accuracy: 0,
-        altitude: 0,
-        heading: 0,
-        speed: 0,
-        speedAccuracy: 0,
-        timestamp: null,
-        floor: 0,
-        isMocked: false,
-      )),
-      builder: (context, _) => builder(context),
-    );
+    return widget.builder(context, _current);
   }
 }
