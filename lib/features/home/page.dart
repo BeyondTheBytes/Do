@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 
+import '../../config/routes.dart';
 import '../../config/state.dart';
 import '../../database/dataclass.dart';
 import '../../database/services.dart';
@@ -128,7 +129,8 @@ class HomePage extends StatelessWidget {
                   size: IconErrorWidget.iconSize,
                 ),
                 title: 'Sem eventos...',
-                description: 'Não há eventos para esses filtros',
+                description:
+                    """Não há eventos na sua região. Crie um evento e chame seus amigos.""",
               ),
             )),
           ),
@@ -141,19 +143,13 @@ class HomePage extends StatelessWidget {
   }
 }
 
-class _HomeWrapper extends StatefulWidget {
-  final Widget body;
-  const _HomeWrapper({required this.body});
-  @override
-  State<_HomeWrapper> createState() => _HomeWrapperState();
-}
-
 // ////////////////////////////////////////////////////////////////
 // WRAPPER
 // ////////////////////////////////////////////////////////////////
 
-class _HomeWrapperState extends State<_HomeWrapper> {
-  var _openned = false;
+class _HomeWrapper extends StatelessWidget {
+  final Widget body;
+  _HomeWrapper({required this.body});
 
   final entryController = EntryController();
 
@@ -162,70 +158,30 @@ class _HomeWrapperState extends State<_HomeWrapper> {
     return DismissibleKeyboardWrapper(
       child: Scaffold(
         backgroundColor: AppColors.of(context).darkest,
-        body: Stack(children: [
-          widget.body,
-          if (_openned)
-            TweenAnimationBuilder<double>(
-              duration: Duration(milliseconds: 200),
-              tween: Tween<double>(begin: 0, end: _openned ? 1 : 0),
-              builder: (context, value, child) =>
-                  Opacity(opacity: value, child: child),
-              child: Container(
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height,
-                color: Colors.black.withOpacity(0.5),
-                padding: EdgeInsets.symmetric(horizontal: 30) +
-                    EdgeInsets.only(
-                      bottom: MediaQuery.of(context).padding.bottom +
-                          MediaQuery.of(context).padding.bottom +
-                          70,
-                    ),
-                child: Align(
-                  alignment: Alignment.bottomCenter,
-                  child: CreateEventDialog(
-                    entryController: entryController,
-                    onAdd: () {
-                      setState(() {
-                        _openned = false;
-                      });
-                      SuccessMessage.of(context)
-                          .show('Evento Criado com Sucesso');
-                    },
-                  ),
+        body: body,
+        floatingActionButton: FloatingActionButton(
+          child: Icon(FontAwesomeIcons.plus, color: Colors.white),
+          onPressed: () => showDialog<void>(
+            context: context,
+            builder: (context) => WillPopScope(
+              onWillPop: () async {
+                entryController.remove();
+                return true;
+              },
+              child: DialogWrapper(
+                child: CreateEventDialog(
+                  entryController: entryController,
+                  onAdd: () {
+                    AppRouter.of(context).popDialog();
+                    SuccessMessage.of(context)
+                        .show('Evento Criado com Sucesso');
+                  },
                 ),
               ),
             ),
-        ]),
-        floatingActionButton: _FloatingActionButton(
-          openned: _openned,
-          onTap: (context) {
-            if (_openned) entryController.remove();
-            setState(() {
-              _openned = !_openned;
-            });
-          },
+          ),
         ),
       ),
-    );
-  }
-}
-
-class _FloatingActionButton extends StatelessWidget {
-  final bool openned;
-  final Function(BuildContext context) onTap;
-  _FloatingActionButton({required this.onTap, required this.openned});
-
-  @override
-  Widget build(BuildContext context) {
-    return FloatingActionButton(
-      child: TweenAnimationBuilder<double>(
-        duration: Duration(milliseconds: 150),
-        tween: Tween<double>(begin: 0, end: openned ? 1 : 0),
-        builder: (context, value, child) =>
-            Transform.rotate(angle: value * pi * 0.25, child: child),
-        child: Icon(FontAwesomeIcons.plus, color: Colors.white),
-      ),
-      onPressed: () => onTap(context),
     );
   }
 }

@@ -120,7 +120,6 @@ class _CreateEventDialogState extends State<CreateEventDialog> {
                 child: CustomButton(
                   child: Text('Criar Evento'),
                   style: AppButton.of(context).largeFilled,
-                  stretch: false,
                   loadingText: false,
                   onPressed: _createEvent,
                 ),
