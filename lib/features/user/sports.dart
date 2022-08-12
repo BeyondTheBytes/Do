@@ -34,11 +34,10 @@ class SportTags extends StatelessWidget {
           ...sports.map((sport) => _buildTag(context, sport)).toList(),
           Container(
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: AppColors.of(context).medium,
               shape: BoxShape.circle,
-              border: Border.all(color: AppColors.of(context).medium, width: 2),
             ),
-            child: Icon(Icons.add_rounded, color: AppColors.of(context).medium),
+            child: Icon(Icons.add_rounded),
           ),
         ],
       ),
