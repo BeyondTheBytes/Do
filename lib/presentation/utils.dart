@@ -18,6 +18,19 @@ extension ListExtensions<Widget> on Iterable<Widget> {
   }
 }
 
+class DefaultHorizontalPadding extends StatelessWidget {
+  final Widget child;
+  DefaultHorizontalPadding({required this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 30),
+      child: child,
+    );
+  }
+}
+
 class EntryController {
   OverlayEntry? entry = null;
 

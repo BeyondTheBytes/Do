@@ -2,7 +2,6 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
@@ -69,8 +68,8 @@ class HomePage extends StatelessWidget {
           child: SizedBox(height: MediaQuery.of(context).padding.top + 35),
         ),
         SliverToBoxAdapter(
-          child: _padding(
-            Row(
+          child: DefaultHorizontalPadding(
+            child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Column(
@@ -112,7 +111,8 @@ class HomePage extends StatelessWidget {
         ),
         if (sports != null) ...[
           SliverToBoxAdapter(
-            child: _padding(Padding(
+            child: DefaultHorizontalPadding(
+                child: Padding(
               padding: const EdgeInsets.only(top: 15.0),
               child: SportTags(sports: sports),
             )),
@@ -120,7 +120,8 @@ class HomePage extends StatelessWidget {
           SliverToBoxAdapter(child: SizedBox(height: 60)),
           ...(events ?? [])
               .map((e) => SliverToBoxAdapter(
-                    child: _padding(EventHorizontalCard(event: e)),
+                    child: DefaultHorizontalPadding(
+                        child: EventHorizontalCard(event: e)),
                   ))
               .withBetween(SliverToBoxAdapter(child: SizedBox(height: 30))),
         ],
@@ -133,7 +134,8 @@ class HomePage extends StatelessWidget {
           ),
         if (events != null && events.isEmpty)
           SliverToBoxAdapter(
-            child: _padding(Padding(
+            child: DefaultHorizontalPadding(
+                child: Padding(
               padding: errorPadding,
               child: IconErrorWidget(
                 icon: Icon(
@@ -153,9 +155,6 @@ class HomePage extends StatelessWidget {
       ],
     );
   }
-
-  Widget _padding(Widget child) =>
-      Padding(padding: EdgeInsets.symmetric(horizontal: 30), child: child);
 
   Future<void> _addProfilePic(BuildContext context) async {
     final image = await ImagePicker().pickImage(source: ImageSource.gallery);
