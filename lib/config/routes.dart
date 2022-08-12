@@ -74,7 +74,6 @@ class RouteConfig {
           NavigationPage.home: (context) => HomePage(),
           NavigationPage.profile: (context) =>
               UserPage(uid: AppState.auth.currentUser!.uid),
-          // TODO: NOW
         },
       );
 }

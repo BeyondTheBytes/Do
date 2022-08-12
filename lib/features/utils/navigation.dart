@@ -90,18 +90,11 @@ class _NavigationWrapperState extends State<NavigationWrapper> {
       curve: Curves.easeInOut,
       tween:
           Tween<double>(begin: 0, end: navigationController.fullpage ? 0 : 1),
-      builder: (context, percMenu, _) => TweenAnimationBuilder<double>(
-        duration: Duration(milliseconds: 350),
-        curve: Curves.easeInOut,
-        tween: Tween<double>(begin: 0, end: _selectedPageIndex.toDouble()),
-        builder: (context, pageIndex, _) =>
-            _buildContent(context, percMenu, pageIndex),
-      ),
+      builder: (context, percMenu, _) => _buildContent(context, percMenu),
     );
   }
 
-  Widget _buildContent(
-      BuildContext context, double percMenu, double pageIndex) {
+  Widget _buildContent(BuildContext context, double percMenu) {
     return Scaffold(
       backgroundColor: _backgroundColor(context),
       body: Stack(children: [
@@ -112,37 +105,23 @@ class _NavigationWrapperState extends State<NavigationWrapper> {
             child: _buildNavigation(context),
           ),
         ),
-        if (navigationController.fullpage)
-          _buildRoatingPage(
-            context,
-            percMenu,
-            1,
-            child: widget.pages[_selectedPage]!(context),
-          ),
-        if (!navigationController.fullpage)
-          ...NavigationPage.values.map(
-            (page) => _buildRoatingPage(
-              context,
-              percMenu,
-              (_indexOfPage(page) <= pageIndex) ? 1 : pageIndex,
-              child: widget.pages[page]!(context),
-            ),
-          ),
+        _buildRoatingPage(
+          context,
+          percMenu,
+          child: widget.pages[_selectedPage]!(context),
+        ),
       ]),
     );
   }
 
   Widget _buildRoatingPage(
     BuildContext context,
-    double percMenu,
-    double pagePerc, {
+    double percMenu, {
     required Widget child,
   }) {
     return Positioned(
       top: percMenu * (MediaQuery.of(context).padding.top + _pageVerticalDelta),
-      left: percMenu * _pageHorizontalDelta +
-          (1 - pagePerc) *
-              (MediaQuery.of(context).size.width * _percPageVisible),
+      left: percMenu * _pageHorizontalDelta,
       child: Transform.rotate(
         angle: percMenu * -0.2,
         child: Container(
