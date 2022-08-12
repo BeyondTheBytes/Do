@@ -10,7 +10,9 @@ class AuthWrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Provider<UserCredential?>(
-      create: (_) => _UserCredential(_User('w5LTjnPNCbRPIY5FovbDrcMw7gj2')),
+      create: (_) => _UserCredential(
+        _User('w5LTjnPNCbRPIY5FovbDrcMw7gj2', 'lucadillenburg'),
+      ),
       builder: (context, _) => builder(context),
     );
   }
@@ -25,5 +27,6 @@ class _UserCredential extends Mock implements UserCredential {
 
 class _User extends Mock implements User {
   final String uid;
-  _User(this.uid);
+  final String displayName;
+  _User(this.uid, this.displayName);
 }

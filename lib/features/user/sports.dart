@@ -22,13 +22,15 @@ class SportTags extends StatelessWidget {
       onTap: () => showDialog<void>(
         context: context,
         builder: (context) => DialogWrapper(
-            child: ConfigSportsDialog(
-          interests: sports,
-          onSaved: AppRouter.of(context).popDialog,
-        )),
+          child: ConfigSportsDialog(
+            interests: sports,
+            onSaved: AppRouter.of(context).popDialog,
+          ),
+        ),
       ),
       child: Wrap(
         runSpacing: 10,
+        spacing: 10,
         children: [
           ...sports.map((sport) => _buildTag(context, sport)).toList(),
           Container(
@@ -39,7 +41,7 @@ class SportTags extends StatelessWidget {
             ),
             child: Icon(Icons.add_rounded, color: AppColors.of(context).medium),
           ),
-        ].withBetween(SizedBox(width: 8)),
+        ],
       ),
     );
   }

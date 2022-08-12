@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 
-final _appColor = AppColors(
+const defaultPageTopPadding = 35.0;
+const defaultPageHorizontalPadding = 35.0;
+
+final _appColor = AppColors._(
   darkest: Color(0xff202233),
   dark: Color(0xff161E5D),
   medium: Color(0xff4657D5),
@@ -27,7 +30,7 @@ final _primarySwatch = MaterialColor(
 
 final _headlineFamily = 'Ultra';
 final _bodyFamily = 'Inter';
-final _appText = AppTexts(
+final _appText = AppTexts._(
   kicker: TextStyle(
     fontFamily: _bodyFamily,
     fontSize: 20,
@@ -118,7 +121,7 @@ final _outlinedButton = ButtonStyle(
   shape: _buttonShape,
   foregroundColor: MaterialStateProperty.all(_appColor.medium),
 );
-final _appButton = AppButton(
+final _appButton = AppButton._(
   largeFilled: _filledButton.copyWith(
     textStyle: MaterialStateProperty.all(_appText.button1),
     padding: MaterialStateProperty.all(
@@ -165,7 +168,7 @@ class AppColors extends ThemeExtension<AppColors> {
   final Color medium;
   final Color warning;
   final Color success;
-  const AppColors({
+  const AppColors._({
     required this.darkest,
     required this.dark,
     required this.medium,
@@ -195,7 +198,7 @@ class AppTexts extends ThemeExtension<AppTexts> {
   final TextStyle body1;
   final TextStyle button1;
   final TextStyle button2;
-  const AppTexts({
+  const AppTexts._({
     required this.kicker,
     required this.title1,
     required this.title2,
@@ -225,7 +228,7 @@ class AppButton extends ThemeExtension<AppButton> {
   final ButtonStyle largeFilled;
   final ButtonStyle outlined;
   final ButtonStyle largeOutlined;
-  const AppButton({
+  const AppButton._({
     required this.text,
     required this.filled,
     required this.largeFilled,

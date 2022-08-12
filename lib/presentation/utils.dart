@@ -18,6 +18,13 @@ extension ListExtensions<Widget> on Iterable<Widget> {
   }
 }
 
+class DefaultPageTopPadding extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(height: defaultPageTopPadding);
+  }
+}
+
 class DefaultHorizontalPadding extends StatelessWidget {
   final Widget child;
   DefaultHorizontalPadding({required this.child});
@@ -25,7 +32,7 @@ class DefaultHorizontalPadding extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 30),
+      padding: EdgeInsets.symmetric(horizontal: defaultPageHorizontalPadding),
       child: child,
     );
   }
@@ -143,40 +150,6 @@ class IconErrorWidget extends StatelessWidget {
             ]
           ],
         ),
-      ),
-    );
-  }
-}
-
-class ProfilePicture extends StatelessWidget {
-  final String? url;
-  const ProfilePicture({required this.url});
-
-  @override
-  Widget build(BuildContext context) {
-    final url = this.url;
-    return AspectRatio(
-      aspectRatio: 1,
-      child: Container(
-        decoration: BoxDecoration(
-          color: url == null ? Colors.white : null,
-          shape: BoxShape.circle,
-          boxShadow: [BoxShadow()],
-          image: (url == null)
-              ? null
-              : DecorationImage(
-                  image: NetworkImage(url),
-                  fit: BoxFit.cover,
-                  alignment: Alignment.center,
-                ),
-        ),
-        child: (url == null)
-            ? Icon(
-                Icons.add_photo_alternate,
-                color: AppColors.of(context).darkest,
-              )
-            : null,
-        // TODO: add picture
       ),
     );
   }

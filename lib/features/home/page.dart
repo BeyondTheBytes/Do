@@ -15,6 +15,7 @@ import '../../presentation/event.dart';
 import '../../presentation/theme.dart';
 import '../../presentation/utils.dart';
 import '../auth/service.dart';
+import '../user/picture.dart';
 import '../user/sports.dart';
 import '../utils/location.dart';
 import 'create_event.dart';
@@ -65,7 +66,9 @@ class HomePage extends StatelessWidget {
     return CustomScrollView(
       slivers: [
         SliverToBoxAdapter(
-          child: SizedBox(height: MediaQuery.of(context).padding.top + 35),
+          child: SizedBox(
+            height: defaultPageTopPadding + MediaQuery.of(context).padding.top,
+          ),
         ),
         SliverToBoxAdapter(
           child: DefaultHorizontalPadding(
@@ -95,13 +98,11 @@ class HomePage extends StatelessWidget {
                   width: 70,
                   height: 70,
                   child: Builder(builder: (context) {
-                    final photoUrl =
-                        context.watch<UserCredential?>()!.user!.photoURL;
-                    return GestureDetector(
-                      onTap: photoUrl == null
-                          ? () => _addProfilePic(context)
-                          : () => _showNavigation(context),
-                      child: ProfilePicture(url: photoUrl),
+                    final user = context.watch<UserCredential?>()!.user!;
+                    return ProfilePicture(
+                      uid: user.uid,
+                      url: user.photoURL,
+                      alternateNoPicture: true,
                     );
                   }),
                 ),
@@ -112,10 +113,11 @@ class HomePage extends StatelessWidget {
         if (sports != null) ...[
           SliverToBoxAdapter(
             child: DefaultHorizontalPadding(
-                child: Padding(
-              padding: const EdgeInsets.only(top: 15.0),
-              child: SportTags(sports: sports),
-            )),
+              child: Padding(
+                padding: const EdgeInsets.only(top: 15.0),
+                child: SportTags(sports: sports),
+              ),
+            ),
           ),
           SliverToBoxAdapter(child: SizedBox(height: 60)),
           ...(events ?? [])
@@ -154,19 +156,6 @@ class HomePage extends StatelessWidget {
           ),
       ],
     );
-  }
-
-  Future<void> _addProfilePic(BuildContext context) async {
-    final image = await ImagePicker().pickImage(source: ImageSource.gallery);
-    if (image == null) return null;
-
-    final authService = UserAuthService();
-    final uid = context.read<UserCredential?>()!.user!.uid;
-    await authService.setProfilePicture(uid, File(image.path));
-  }
-
-  void _showNavigation(BuildContext context) {
-    // TODO:
   }
 }
 

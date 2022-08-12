@@ -66,7 +66,7 @@ class _CustomButtonState extends State<CustomButton> {
   }) =>
       widget.filled
           ? OutlinedButton(onPressed: onPressed, child: child, style: style)
-          : TextButton(onPressed: onPressed, child: child);
+          : TextButton(onPressed: onPressed, child: child, style: style);
 
   Function()? _buildOnPressed() {
     final onPressed = widget.onPressed;
