@@ -1,20 +1,18 @@
-import 'dart:io';
 import 'dart:math';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
+import '../../config/state.dart';
 import '../../database/dataclass.dart';
 import '../../database/services.dart';
 import '../../domain/structures.dart';
 import '../../presentation/event.dart';
 import '../../presentation/theme.dart';
 import '../../presentation/utils.dart';
-import '../auth/service.dart';
 import '../user/picture.dart';
 import '../user/sports.dart';
 import '../utils/location.dart';
@@ -31,8 +29,7 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return _HomeWrapper(
       body: StreamBuilder<UserConfig>(
-          stream:
-              userConfig.stream(context.watch<UserCredential?>()!.user!.uid),
+          stream: userConfig.stream(AppState.auth.currentUser!.uid),
           builder: (context, snapshot) {
             final userConfig = snapshot.data;
             final sports = userConfig?.sports;
@@ -97,14 +94,17 @@ class HomePage extends StatelessWidget {
                 Container(
                   width: 70,
                   height: 70,
-                  child: Builder(builder: (context) {
-                    final user = context.watch<UserCredential?>()!.user!;
-                    return ProfilePicture(
-                      uid: user.uid,
-                      url: user.photoURL,
-                      alternateNoPicture: true,
-                    );
-                  }),
+                  child: StreamBuilder<User?>(
+                    stream: AppState.auth.userStream,
+                    builder: (context, snapshot) {
+                      final user = snapshot.data!;
+                      return ProfilePicture(
+                        uid: user.uid,
+                        url: user.photoURL,
+                        alternateNoPicture: true,
+                      );
+                    },
+                  ),
                 ),
               ],
             ),

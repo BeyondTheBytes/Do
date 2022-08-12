@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../config/routes.dart';
+import '../config/state.dart';
 import '../database/dataclass.dart';
 import '../database/services.dart';
 import 'button.dart';
@@ -72,8 +73,7 @@ class EventHorizontalCard extends StatelessWidget {
   }
 
   Widget _buildButtons(BuildContext context) {
-    final relation =
-        event.relation(context.watch<UserCredential?>()!.user!.uid);
+    final relation = event.relation(AppState.auth.currentUser!.uid);
     final iconData = () {
       switch (relation) {
         case EventRelation.none:

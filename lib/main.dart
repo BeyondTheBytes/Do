@@ -4,7 +4,6 @@ import 'package:flutter/services.dart';
 
 import 'config/constants.dart';
 import 'config/routes.dart';
-import 'features/auth/wrapper.dart';
 import 'features/utils/location.dart';
 import 'firebase_options.dart';
 import 'presentation/theme.dart';
@@ -28,16 +27,14 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return LocationWrapper(
-      builder: (context) => AuthWrapper(
-        builder: (context) => MaterialApp.router(
-          title: 'Do.',
-          theme: theme,
-          color: theme.colorScheme.primary,
-          // route
-          routeInformationParser: routeConfig.routeInformationParser,
-          routerDelegate: routeConfig.routerDelegate,
-          backButtonDispatcher: routeConfig.backButtonDispatcher,
-        ),
+      builder: (context) => MaterialApp.router(
+        title: 'Do.',
+        theme: theme,
+        color: theme.colorScheme.primary,
+        // route
+        routeInformationParser: routeConfig.routeInformationParser,
+        routerDelegate: routeConfig.routerDelegate,
+        backButtonDispatcher: routeConfig.backButtonDispatcher,
       ),
     );
   }

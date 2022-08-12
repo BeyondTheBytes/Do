@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 import 'package:tinycolor2/tinycolor2.dart';
 
 import '../../config/constants.dart';
+import '../../config/state.dart';
 import '../../presentation/theme.dart';
 import '../auth/service.dart';
 
@@ -24,8 +25,9 @@ class ProfilePicture extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final url = this.url;
+    final canEdit = uid == AppState.auth.currentUser!.uid;
     return GestureDetector(
-      onTap: () => _changeProfilePic(context),
+      onTap: canEdit ? () => _changeProfilePic(context) : null,
       child: AspectRatio(
         aspectRatio: 1,
         child: Stack(
@@ -46,7 +48,7 @@ class ProfilePicture extends StatelessWidget {
                   ? Assets.profilePicture(alternate: alternateNoPicture)
                   : null,
             ),
-            if (uid == context.watch<UserCredential?>()!.user!.uid)
+            if (canEdit)
               Positioned(
                 right: 2,
                 bottom: 2,

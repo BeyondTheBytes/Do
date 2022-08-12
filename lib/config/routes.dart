@@ -1,6 +1,5 @@
 import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 import '../features/auth/pages.dart';
 import '../features/home/page.dart';

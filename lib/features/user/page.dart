@@ -1,10 +1,9 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:provider/provider.dart';
 
 import '../../config/routes.dart';
+import '../../config/state.dart';
 import '../../database/dataclass.dart';
 import '../../database/services.dart';
 import '../../presentation/button.dart';
@@ -19,12 +18,12 @@ class UserPage extends StatelessWidget {
   UserPage({required this.uid});
 
   final events = EventsService();
+  final usersConfig = UserConfigService();
 
   @override
   Widget build(BuildContext context) {
-    final user = context.watch<UserCredential?>()!.user!;
     return StreamBuilder<UserConfig>(
-      stream: UserConfigService().stream(uid),
+      stream: usersConfig.stream(uid),
       builder: (context, configSnapshot) {
         final userConfig = configSnapshot.data;
         return Scaffold(
@@ -39,88 +38,7 @@ class UserPage extends StatelessWidget {
                     bottom: 25,
                   ),
                   color: AppColors.of(context).medium,
-                  child: Column(
-                    children: [
-                      DefaultHorizontalPadding(
-                        child: Row(
-                          children: [
-                            Container(
-                              width: 70,
-                              height: 70,
-                              child: ProfilePicture(
-                                uid: user.uid,
-                                url: user.photoURL,
-                              ),
-                            ),
-                            SizedBox(width: 15),
-                            Expanded(
-                              child: AutoSizeText(
-                                // ignore: prefer_interpolation_to_compose_strings
-                                user.displayName!.toLowerCase() + '.',
-                                maxLines: 1,
-                                style: AppTexts.of(context)
-                                    .title2
-                                    .copyWith(color: Colors.white),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      DefaultHorizontalPadding(
-                        child: Builder(
-                          builder: (context) {
-                            final description = userConfig?.description;
-                            if (description == null) return SizedBox();
-                            return Padding(
-                              padding: const EdgeInsets.only(top: 25),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    description.isNotEmpty
-                                        ? description
-                                        : """Conte-nos um pouco mais sobre você... """
-                                            """Você pode dizer que topa abrir uma breja depois """
-                                            """dos encontros ou como entrou nos esportes.""",
-                                    style: AppTexts.of(context).body1.copyWith(
-                                          color: description.isNotEmpty
-                                              ? Colors.white
-                                              : Colors.grey[300],
-                                          height: 1.4,
-                                        ),
-                                  ),
-                                  SizedBox(height: 4),
-                                  GestureDetector(
-                                    onTap: () => showDialog<void>(
-                                      context: context,
-                                      builder: (context) => DialogWrapper(
-                                          child: _ChangeDescriptionDialog(
-                                        uid: user.uid,
-                                        description: description,
-                                      )),
-                                    ),
-                                    child: Text(
-                                      description.isNotEmpty
-                                          ? 'editar'
-                                          : 'adicionar',
-                                      style:
-                                          AppTexts.of(context).body1.copyWith(
-                                                color: Colors.white,
-                                                decoration:
-                                                    TextDecoration.underline,
-                                                fontWeight: FontWeight.w500,
-                                                fontStyle: FontStyle.italic,
-                                              ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
+                  child: _buildIntroInfo(userConfig),
                 ),
               ),
               SliverToBoxAdapter(child: SizedBox(height: 15)),
@@ -155,6 +73,98 @@ class UserPage extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+
+  Widget _buildIntroInfo(UserConfig? userConfig) {
+    return Column(
+      children: [
+        DefaultHorizontalPadding(
+          child: Row(
+            children: [
+              Container(
+                width: 70,
+                height: 70,
+                child: StreamBuilder<User?>(
+                  stream: AppState.auth.userStream,
+                  builder: (context, snapshot) {
+                    final user = snapshot.data!;
+                    return ProfilePicture(
+                      uid: user.uid,
+                      url: user.photoURL,
+                    );
+                  },
+                ),
+              ),
+              SizedBox(width: 15),
+              Expanded(
+                child: Builder(
+                  builder: (context) {
+                    final name = AppState.auth.currentUser!.displayName!;
+                    return AutoSizeText(
+                      // ignore: prefer_interpolation_to_compose_strings
+                      name.toLowerCase() + '.',
+                      maxLines: 1,
+                      style: AppTexts.of(context)
+                          .title2
+                          .copyWith(color: Colors.white),
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
+        DefaultHorizontalPadding(
+          child: Builder(
+            builder: (context) {
+              final description = userConfig?.description;
+              if (description == null) return SizedBox();
+              return Padding(
+                padding: const EdgeInsets.only(top: 25),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      description.isNotEmpty
+                          ? description
+                          : """Conte-nos um pouco mais sobre você... """
+                              """Você pode dizer que topa abrir uma breja depois """
+                              """dos encontros ou como entrou nos esportes.""",
+                      style: AppTexts.of(context).body1.copyWith(
+                            color: description.isNotEmpty
+                                ? Colors.white
+                                : Colors.grey[300],
+                            height: 1.4,
+                          ),
+                    ),
+                    SizedBox(height: 4),
+                    GestureDetector(
+                      onTap: () => showDialog<void>(
+                        context: context,
+                        builder: (context) => DialogWrapper(
+                            child: _ChangeDescriptionDialog(
+                          uid: AppState.auth.currentUser!.uid,
+                          description: description,
+                        )),
+                      ),
+                      child: Text(
+                        description.isNotEmpty ? 'editar' : 'adicionar',
+                        style: AppTexts.of(context).body1.copyWith(
+                              color: Colors.white,
+                              decoration: TextDecoration.underline,
+                              fontWeight: FontWeight.w500,
+                              fontStyle: FontStyle.italic,
+                            ),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        ),
+      ],
     );
   }
 
