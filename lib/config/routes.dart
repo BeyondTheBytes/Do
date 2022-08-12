@@ -82,11 +82,12 @@ class AppRouter {
   final BuildContext context;
   AppRouter.of(this.context);
 
-  void navigateLoggedOut() {
-    Beamer.of(context).beamToNamed(_RouterConstants.login);
+  void pushReplacementSign() {
+    Beamer.of(context)
+        .beamToReplacementNamed(_RouterConstants.login, stacked: false);
   }
 
-  void navigateLogged() {
+  void pushReplacementHome() {
     Beamer.of(context)
         .beamToReplacementNamed(_RouterConstants.home, stacked: false);
   }

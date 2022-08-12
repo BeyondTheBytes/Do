@@ -37,7 +37,7 @@ class NavigationButton extends StatelessWidget {
       ),
       child: CustomGestureDetector(
         onTap: () {
-          navigationController.setFullpage(false);
+          navigationController.setFullpage(!navigationController.fullpage);
         },
         padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
         child: Container(
@@ -84,8 +84,10 @@ class _NavigationWrapperState extends State<NavigationWrapper> {
     return TweenAnimationBuilder<double>(
       duration: Duration(milliseconds: 350),
       curve: Curves.easeInOut,
-      tween:
-          Tween<double>(begin: 0, end: navigationController.fullpage ? 0 : 1),
+      tween: Tween<double>(
+        begin: 0,
+        end: navigationController.fullpage ? 0 : 1,
+      ),
       builder: (context, percMenu, _) => _buildContent(context, percMenu),
     );
   }
@@ -211,10 +213,7 @@ class _NavigationWrapperState extends State<NavigationWrapper> {
                     Colors.white,
                   ),
                 ),
-            onPressed: () {
-              AppRouter.of(context).navigateLoggedOut();
-              UserAuthService().signOut();
-            },
+            onPressed: _signOut,
           ),
         ),
       ],
@@ -229,14 +228,7 @@ class _NavigationWrapperState extends State<NavigationWrapper> {
   }) {
     final isSelected = page == _selectedPage;
     return GestureDetector(
-      onTap: isSelected
-          ? null
-          : () {
-              setState(() {
-                navigationController.setFullpage(true);
-                _selectedPage = page;
-              });
-            },
+      onTap: isSelected ? null : () => _selectPage(page),
       child: Container(
         decoration: BoxDecoration(
           color: !isSelected
@@ -266,5 +258,18 @@ class _NavigationWrapperState extends State<NavigationWrapper> {
         ),
       ),
     );
+  }
+
+  void _signOut() {
+    AppRouter.of(context).pushReplacementSign();
+    navigationController.setFullpage(false);
+    UserAuthService().signOut();
+  }
+
+  void _selectPage(NavigationPage page) {
+    setState(() {
+      navigationController.setFullpage(true);
+      _selectedPage = page;
+    });
   }
 }

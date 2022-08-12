@@ -13,19 +13,18 @@ import '../../presentation/theme.dart';
 import '../auth/service.dart';
 
 class ProfilePicture extends StatelessWidget {
-  final String uid;
   final String? url;
+  final bool canEdit;
   final bool alternateNoPicture;
   const ProfilePicture({
-    required this.uid,
     required this.url,
+    this.canEdit = false,
     this.alternateNoPicture = false,
   });
 
   @override
   Widget build(BuildContext context) {
     final url = this.url;
-    final canEdit = uid == AppState.auth.currentUser!.uid;
     return GestureDetector(
       onTap: canEdit ? () => _changeProfilePic(context) : null,
       child: AspectRatio(

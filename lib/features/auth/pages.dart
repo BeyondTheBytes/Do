@@ -184,18 +184,18 @@ class _SignPageState extends State<SignPage> {
   }
 
   Future<void> _onSign(BuildContext context) async {
-    if (CustomInputFormatter.phoneLength != _phone.text.length) {
-      return ErrorMessage.of(context)
-          .show('Digite seu o número de celular completo.');
-    }
-    if (_name.text.length < CustomInputFormatter.minNameLength) {
-      return ErrorMessage.of(context).show(
-        """O nome precisa ter mais de ${CustomInputFormatter.minNameLength} caracteres.""",
-      );
-    }
-
     final emailService = EmailAuthService();
     if (_signUp) {
+      if (CustomInputFormatter.phoneLength != _phone.text.length) {
+        return ErrorMessage.of(context)
+            .show('Digite seu o número de celular completo.');
+      }
+      if (_name.text.length < CustomInputFormatter.minNameLength) {
+        return ErrorMessage.of(context).show(
+          """O nome precisa ter mais de ${CustomInputFormatter.minNameLength} caracteres.""",
+        );
+      }
+
       final either = await emailService.signUp(
         email: _email.text,
         name: _name.text,
@@ -205,7 +205,7 @@ class _SignPageState extends State<SignPage> {
         success: (user) async {
           final configService = UserConfigService();
           await configService.setPhone(user.user!.uid, phone: _phone.text);
-          AppRouter.of(context).navigateLogged();
+          AppRouter.of(context).pushReplacementHome();
         },
         failure: (failure) =>
             ErrorMessage.of(context).show(failure.description),
@@ -216,7 +216,7 @@ class _SignPageState extends State<SignPage> {
         password: _password.text,
       );
       either.when(
-        success: (user) => AppRouter.of(context).navigateLogged(),
+        success: (user) => AppRouter.of(context).pushReplacementHome(),
         failure: (failure) =>
             ErrorMessage.of(context).show(failure.description),
       );

@@ -87,10 +87,10 @@ class UserPage extends StatelessWidget {
                 child: StreamBuilder<User?>(
                   stream: AppState.auth.userStream,
                   builder: (context, snapshot) {
-                    final user = snapshot.data!;
+                    final user = snapshot.data;
                     return ProfilePicture(
-                      uid: user.uid,
-                      url: user.photoURL,
+                      canEdit: uid == user?.uid,
+                      url: user?.photoURL,
                     );
                   },
                 ),
