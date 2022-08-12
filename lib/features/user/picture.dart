@@ -8,6 +8,7 @@ import 'package:tinycolor2/tinycolor2.dart';
 import '../../config/constants.dart';
 import '../../config/state.dart';
 import '../../presentation/theme.dart';
+import '../../presentation/utils.dart';
 import '../auth/service.dart';
 
 class ProfilePicture extends StatelessWidget {
@@ -68,10 +69,37 @@ class ProfilePicture extends StatelessWidget {
     final image = await ImagePicker().pickImage(source: ImageSource.gallery);
     if (image == null) return null;
 
-    final authService = UserAuthService();
-    authService.setProfilePicture(
-      AppState.auth.currentUser!.uid,
-      File(image.path),
+    final controller = EntryController();
+    controller.insert(
+      context,
+      OverlayEntry(
+        builder: (context) => Material(
+          color: Colors.transparent,
+          child: Align(
+            alignment: Alignment.bottomCenter,
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(200),
+              ),
+              padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+              margin: EdgeInsets.only(bottom: 30),
+              child: Text(
+                'Modificando a imagem de perfil...',
+                style: TextStyle(color: Colors.grey[800]),
+              ),
+            ),
+          ),
+        ),
+      ),
     );
+
+    final authService = UserAuthService();
+    authService
+        .setProfilePicture(
+          AppState.auth.currentUser!.uid,
+          File(image.path),
+        )
+        .then((e) => controller.remove());
   }
 }
