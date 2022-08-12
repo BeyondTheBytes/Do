@@ -212,7 +212,7 @@ class EventHorizontalCard extends StatelessWidget {
         if (result == true) {
           await events.unparticipate(
             event.id,
-            context.read<UserCredential?>()!.user!.uid,
+            AppState.auth.currentUser!.uid,
           );
         }
         break;
@@ -220,7 +220,7 @@ class EventHorizontalCard extends StatelessWidget {
         HapticFeedback.heavyImpact();
         await events.participate(
           event.id,
-          context.read<UserCredential?>()!.user!.uid,
+          AppState.auth.currentUser!.uid,
         );
     }
   }

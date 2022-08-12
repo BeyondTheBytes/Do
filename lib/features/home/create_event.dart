@@ -9,6 +9,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_place/google_place.dart';
 import 'package:provider/provider.dart';
 
+import '../../config/state.dart';
 import '../../database/dataclass.dart';
 import '../../database/services.dart';
 import '../../presentation/button.dart';
@@ -207,7 +208,7 @@ class _CreateEventDialogState extends State<CreateEventDialog> {
     final image = images[Random().nextInt(images.length)];
 
     final event = EventData(
-      creatorUid: context.read<UserCredential?>()!.user!.uid,
+      creatorUid: AppState.auth.currentUser!.uid,
       date: dateTime,
       observations: _observations.text,
       participants: null,

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../config/routes.dart';
+import '../../config/state.dart';
 import '../../database/dataclass.dart';
 import '../../database/services.dart';
 import '../../presentation/button.dart';
@@ -202,7 +203,7 @@ class _ConfigSportsDialogState extends State<ConfigSportsDialog> {
   Future<void> _saveInterests(BuildContext context) async {
     final users = UserConfigService();
     await users.setInterests(
-      context.read<UserCredential?>()!.user!.uid,
+      AppState.auth.currentUser!.uid,
       interests: _interests,
     );
     widget.onSaved();

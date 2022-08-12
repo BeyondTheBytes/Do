@@ -11,6 +11,7 @@ import '../../config/constants.dart';
 import '../../config/state.dart';
 import '../../presentation/theme.dart';
 import '../auth/service.dart';
+import '../auth/state.dart';
 
 class ProfilePicture extends StatelessWidget {
   final String? url;
@@ -71,7 +72,9 @@ class ProfilePicture extends StatelessWidget {
     if (image == null) return null;
 
     final authService = UserAuthService();
-    final uid = context.read<UserCredential?>()!.user!.uid;
-    await authService.setProfilePicture(uid, File(image.path));
+    await authService.setProfilePicture(
+      AppState.auth.currentUser!.uid,
+      File(image.path),
+    );
   }
 }
