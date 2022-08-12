@@ -80,6 +80,12 @@ class _NavigationWrapperState extends State<NavigationWrapper> {
   }
 
   @override
+  void dispose() {
+    navigationController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return TweenAnimationBuilder<double>(
       duration: Duration(milliseconds: 350),
