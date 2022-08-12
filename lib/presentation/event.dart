@@ -54,14 +54,21 @@ class EventHorizontalCard extends StatelessWidget {
                 ),
               ),
             ),
-            Container(
-              padding: EdgeInsets.all(10),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  _buildButtons(context),
-                  _buildInfo(context),
-                ],
+            Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Container(
+                  alignment: Alignment.bottomLeft,
+                  padding: EdgeInsets.all(10),
+                  child: _buildInfo(context),
+                ),
+              ],
+            ),
+            Transform.translate(
+              offset: Offset(4, -4),
+              child: Container(
+                alignment: Alignment.topRight,
+                child: _buildButtons(context),
               ),
             ),
           ],
@@ -91,45 +98,41 @@ class EventHorizontalCard extends StatelessWidget {
       }
     };
 
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: [
-        SizedBox(width: 5),
-        EntirelyTappable(
-          onTap: () => _updateStatus(context, relation),
-          child: Container(
-            decoration: BoxDecoration(
-              color: backgroundcolor(),
-              borderRadius: BorderRadius.circular(30),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black,
-                  blurRadius: 1,
-                  spreadRadius: -1,
-                )
-              ],
-            ),
-            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                SizedBox(width: 5),
-                Text(
-                  (event.getParticipants.length + 1).toString(),
-                  style: TextStyle(fontWeight: FontWeight.w400, fontSize: 18),
-                ),
-                Container(
-                  margin: EdgeInsets.symmetric(horizontal: 9),
-                  width: 0.5,
-                  height: 18,
-                  color: Colors.white,
-                ),
-                Icon(iconData(), size: 16),
-              ],
-            ),
+    return EntirelyTappable(
+      onTap: () => _updateStatus(context, relation),
+      child: Container(
+        decoration: BoxDecoration(
+          color: backgroundcolor(),
+          borderRadius: BorderRadius.circular(2).copyWith(
+            topRight: Radius.circular(15),
           ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black,
+              blurRadius: 1,
+              spreadRadius: -1,
+            )
+          ],
         ),
-      ],
+        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            SizedBox(width: 5),
+            Text(
+              (event.getParticipants.length + 1).toString(),
+              style: TextStyle(fontWeight: FontWeight.w400, fontSize: 18),
+            ),
+            Container(
+              margin: EdgeInsets.symmetric(horizontal: 9),
+              width: 0.5,
+              height: 18,
+              color: Colors.white,
+            ),
+            Icon(iconData(), size: 16),
+          ],
+        ),
+      ),
     );
   }
 
