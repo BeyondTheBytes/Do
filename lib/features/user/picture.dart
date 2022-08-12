@@ -69,7 +69,7 @@ class ProfilePicture extends StatelessWidget {
     if (image == null) return null;
 
     final authService = UserAuthService();
-    await authService.setProfilePicture(
+    authService.setProfilePicture(
       AppState.auth.currentUser!.uid,
       File(image.path),
     );

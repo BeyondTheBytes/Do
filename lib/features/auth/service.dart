@@ -85,10 +85,11 @@ class EmailAuthService {
 class UserAuthService {
   Future<void> setProfilePicture(String uid, File file) async {
     final ref = FirebaseStorage.instance.ref().child('profiles/$uid');
-    ref.putFile(file).asStream();
+    await ref.putFile(file);
 
+    final imageUrl = await ref.getDownloadURL();
     final user = await FirebaseAuth.instance.currentUser;
-    user!.updatePhotoURL(ref.fullPath);
+    user!.updatePhotoURL(imageUrl);
   }
 
   Future<void> signOut() async {
