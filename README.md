@@ -1,16 +1,18 @@
-# do_app
+<img src="readme/icon.png" width="128"/>
 
-A new Flutter project.
+**Create sport events to meet new people and practice more.**
+<br/>
+<br/>
 
-## Getting Started
+<img src="readme/app1.PNG" width="256"/>
+<img src="readme/app2.PNG" width="256"/>
+<img src="readme/app3.PNG" width="256"/>
+<img src="readme/app4.PNG" width="256"/>
+<img src="readme/app5.jpeg" width="256"/>
 
-This project is a starting point for a Flutter application.
+<br/>
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+### Information
+- Working MVP developed in less than a week
+- Idea, Design and Development by Luca Dillenburg
+- Figma Design: [https://www.figma.com/file/tmGShPQBkhL4BSPegtd85a/Do.-App?node-id=0%3A1](https://www.figma.com/file/tmGShPQBkhL4BSPegtd85a/Do.-App?node-id=0%3A1)
