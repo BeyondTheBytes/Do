@@ -4,7 +4,6 @@ import 'package:flutter/services.dart';
 
 import 'config/constants.dart';
 import 'config/routes.dart';
-import 'features/utils/location.dart';
 import 'firebase_options.dart';
 import 'presentation/theme.dart';
 

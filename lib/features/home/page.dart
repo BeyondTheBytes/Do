@@ -4,7 +4,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
-import 'package:provider/provider.dart';
 
 import '../../config/state.dart';
 import '../../database/dataclass.dart';
@@ -16,6 +15,7 @@ import '../../presentation/utils.dart';
 import '../user/picture.dart';
 import '../user/sports.dart';
 import '../utils/location.dart';
+import '../utils/navigation.dart';
 import 'create_event.dart';
 
 // TODO: let user edit radius
@@ -61,34 +61,17 @@ class HomePage extends StatelessWidget {
     const errorPadding = EdgeInsets.only(top: 60);
     return CustomScrollView(
       slivers: [
-        SliverToBoxAdapter(
-          child: SizedBox(
-            height: defaultPageTopPadding + MediaQuery.of(context).padding.top,
-          ),
-        ),
+        SliverToBoxAdapter(child: NavigationButton()),
         SliverToBoxAdapter(
           child: DefaultHorizontalPadding(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      '${_radius.round()}km, hoje  ',
-                      style: AppTexts.of(context).kicker.copyWith(
-                            color: Colors.white,
-                            fontSize: 22,
-                          ),
-                    ),
-                    Text(
-                      'Do.',
-                      style: AppTexts.of(context)
-                          .title1
-                          .copyWith(color: Colors.white, height: 1),
-                    ),
-                  ],
+                Text(
+                  'Do.',
+                  style: AppTexts.of(context)
+                      .title1
+                      .copyWith(color: Colors.white, height: 1),
                 ),
                 Container(
                   width: 70,
@@ -193,7 +176,10 @@ class _HomeWrapperState extends State<_HomeWrapper> {
                 color: Colors.black.withOpacity(0.5),
                 padding: EdgeInsets.symmetric(horizontal: 30) +
                     EdgeInsets.only(
-                        bottom: MediaQuery.of(context).padding.bottom + 100),
+                      bottom: MediaQuery.of(context).padding.bottom +
+                          MediaQuery.of(context).padding.bottom +
+                          70,
+                    ),
                 child: Align(
                   alignment: Alignment.bottomCenter,
                   child: CreateEventDialog(

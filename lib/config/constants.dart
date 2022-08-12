@@ -20,4 +20,10 @@ class Assets {
   static Widget profilePicture({bool alternate = false}) => alternate
       ? SvgPicture.asset('assets/img/picture-inverted.svg')
       : SvgPicture.asset('assets/img/picture.svg');
+
+  static Widget menu({bool alternate = false}) => SvgPicture.asset(
+        'assets/img/menu.svg',
+        alignment: Alignment.topLeft,
+        color: Colors.white.withOpacity(0.7),
+      );
 }

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
-const defaultPageTopPadding = 35.0;
-const defaultPageHorizontalPadding = 35.0;
+const pageHorizontalPadding = 35.0;
 
 final _appColor = AppColors._(
   darkest: Color(0xff202233),

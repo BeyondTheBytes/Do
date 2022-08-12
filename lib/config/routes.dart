@@ -4,14 +4,16 @@ import 'package:flutter/material.dart';
 import '../features/auth/pages.dart';
 import '../features/home/page.dart';
 import '../features/user/page.dart';
+import '../features/utils/navigation.dart';
 import '../presentation/pages.dart';
+import 'state.dart';
 
 /// DEFINITIONS
 
 class _RouterConstants {
   static const initial = '/';
-  static const login = '/login';
   static const home = '/home';
+  static const login = '/login';
   static const user = _ParameterUrl(baseUrl: '/user', pathParam: 'user');
 }
 
@@ -36,7 +38,7 @@ class RouteConfig {
               title: _title,
               key: ValueKey('initial-page'),
               child: InitialPage(
-                loggedBuilder: (context) => HomePage(),
+                loggedBuilder: (context) => _signedPage(),
                 unloggedBuilder: (context) => SignPage(),
               ),
             ),
@@ -46,9 +48,9 @@ class RouteConfig {
               child: SignPage(),
             ),
         _RouterConstants.home: (context, state, data) => BeamPage(
-              title: 'Home - $_title',
+              title: _title,
               key: ValueKey('home-page'),
-              child: HomePage(),
+              child: _signedPage(),
             ),
         _RouterConstants.user.resolveUrl: (context, state, data) {
           final uid = state.pathParameters[_RouterConstants.user.pathParam];
@@ -66,6 +68,15 @@ class RouteConfig {
       child: UnknownRoute(),
     ),
   );
+
+  static Widget _signedPage() => NavigationWrapper(
+        pages: {
+          NavigationPage.home: (context) => HomePage(),
+          NavigationPage.profile: (context) =>
+              UserPage(uid: AppState.auth.currentUser!.uid),
+          // TODO: NOW
+        },
+      );
 }
 
 class AppRouter {

@@ -18,10 +18,26 @@ extension ListExtensions<Widget> on Iterable<Widget> {
   }
 }
 
-class DefaultPageTopPadding extends StatelessWidget {
+class CustomGestureDetector extends StatelessWidget {
+  final Function() onTap;
+  final Widget child;
+  final EdgeInsets? padding;
+  const CustomGestureDetector({
+    required this.onTap,
+    required this.child,
+    this.padding,
+  });
+
   @override
   Widget build(BuildContext context) {
-    return SizedBox(height: defaultPageTopPadding);
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        color: Colors.transparent,
+        padding: padding,
+        child: child,
+      ),
+    );
   }
 }
 
@@ -32,7 +48,7 @@ class DefaultHorizontalPadding extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: defaultPageHorizontalPadding),
+      padding: EdgeInsets.symmetric(horizontal: pageHorizontalPadding),
       child: child,
     );
   }

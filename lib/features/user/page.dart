@@ -10,6 +10,7 @@ import '../../presentation/button.dart';
 import '../../presentation/event.dart';
 import '../../presentation/theme.dart';
 import '../../presentation/utils.dart';
+import '../utils/navigation.dart';
 import 'picture.dart';
 import 'sports.dart';
 
@@ -32,11 +33,7 @@ class UserPage extends StatelessWidget {
             slivers: [
               SliverToBoxAdapter(
                 child: Container(
-                  padding: EdgeInsets.only(
-                    top: MediaQuery.of(context).padding.top +
-                        defaultPageHorizontalPadding,
-                    bottom: 25,
-                  ),
+                  padding: EdgeInsets.only(bottom: 25),
                   color: AppColors.of(context).medium,
                   child: _buildIntroInfo(userConfig),
                 ),
@@ -46,7 +43,7 @@ class UserPage extends StatelessWidget {
                 SliverToBoxAdapter(
                   child: Padding(
                     padding: EdgeInsets.symmetric(
-                      horizontal: defaultPageHorizontalPadding,
+                      horizontal: pageHorizontalPadding,
                     ),
                     child: SportTags(sports: userConfig.sports),
                   ),
@@ -61,8 +58,8 @@ class UserPage extends StatelessWidget {
                       return Padding(
                         padding: EdgeInsets.only(
                           top: 50,
-                          left: defaultPageHorizontalPadding,
-                          right: defaultPageHorizontalPadding,
+                          left: pageHorizontalPadding,
+                          right: pageHorizontalPadding,
                         ),
                         child: _buildEvents(context, events),
                       );
@@ -78,7 +75,9 @@ class UserPage extends StatelessWidget {
 
   Widget _buildIntroInfo(UserConfig? userConfig) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        NavigationButton(),
         DefaultHorizontalPadding(
           child: Row(
             children: [
