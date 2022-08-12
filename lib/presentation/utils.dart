@@ -53,6 +53,7 @@ class DialogWrapper extends StatelessWidget {
   Widget build(BuildContext context) {
     return Dialog(
       insetPadding: EdgeInsets.all(20.0),
+      backgroundColor: Colors.transparent,
       child: Container(
         width: MediaQuery.of(context).size.width * 0.8,
         constraints: BoxConstraints(maxWidth: 500),
