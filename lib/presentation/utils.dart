@@ -18,29 +18,6 @@ extension ListExtensions<Widget> on Iterable<Widget> {
   }
 }
 
-class CustomGestureDetector extends StatelessWidget {
-  final Function() onTap;
-  final Widget child;
-  final EdgeInsets? padding;
-  const CustomGestureDetector({
-    required this.onTap,
-    required this.child,
-    this.padding,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        color: Colors.transparent,
-        padding: padding,
-        child: child,
-      ),
-    );
-  }
-}
-
 class DefaultHorizontalPadding extends StatelessWidget {
   final Widget child;
   DefaultHorizontalPadding({required this.child});

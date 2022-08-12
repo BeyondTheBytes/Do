@@ -35,7 +35,7 @@ class NavigationButton extends StatelessWidget {
         left: pageHorizontalPadding - 15,
         right: pageHorizontalPadding - 15,
       ),
-      child: CustomGestureDetector(
+      child: EntirelyTappable(
         onTap: () {
           navigationController.setFullpage(!navigationController.fullpage);
         },
@@ -151,7 +151,7 @@ class _NavigationWrapperState extends State<NavigationWrapper> {
       children: [
         Padding(
           padding: EdgeInsets.only(left: pageHorizontalPadding - 15),
-          child: GestureDetector(
+          child: EntirelyTappable(
             onTap: () {
               navigationController.setFullpage(true);
             },
@@ -227,7 +227,7 @@ class _NavigationWrapperState extends State<NavigationWrapper> {
     required String name,
   }) {
     final isSelected = page == _selectedPage;
-    return GestureDetector(
+    return EntirelyTappable(
       onTap: isSelected ? null : () => _selectPage(page),
       child: Container(
         decoration: BoxDecoration(

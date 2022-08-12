@@ -138,7 +138,7 @@ class UserPage extends StatelessWidget {
                           ),
                     ),
                     SizedBox(height: 4),
-                    GestureDetector(
+                    EntirelyTappable(
                       onTap: () => showDialog<void>(
                         context: context,
                         builder: (context) => DialogWrapper(

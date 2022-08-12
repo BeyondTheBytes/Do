@@ -1,13 +1,11 @@
 import 'dart:io';
 import 'dart:math';
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_place/google_place.dart';
-import 'package:provider/provider.dart';
 
 import '../../config/state.dart';
 import '../../database/dataclass.dart';
@@ -321,7 +319,7 @@ class _LocalSearch extends StatelessWidget {
   }
 
   Widget itemBuilder(BuildContext context, AutocompletePrediction prediction) {
-    return GestureDetector(
+    return EntirelyTappable(
       onTap: () => onSelect(prediction),
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),

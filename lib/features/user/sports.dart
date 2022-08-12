@@ -1,7 +1,5 @@
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 import '../../config/routes.dart';
 import '../../config/state.dart';
@@ -19,7 +17,7 @@ class SportTags extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return EntirelyTappable(
       onTap: () => showDialog<void>(
         context: context,
         builder: (context) => DialogWrapper(

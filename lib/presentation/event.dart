@@ -1,9 +1,7 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
 
 import '../config/routes.dart';
 import '../config/state.dart';
@@ -97,7 +95,7 @@ class EventHorizontalCard extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         SizedBox(width: 5),
-        GestureDetector(
+        EntirelyTappable(
           onTap: () => _updateStatus(context, relation),
           child: Container(
             decoration: BoxDecoration(

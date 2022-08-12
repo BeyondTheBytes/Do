@@ -1,17 +1,14 @@
 import 'dart:io';
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:provider/provider.dart';
 import 'package:tinycolor2/tinycolor2.dart';
 
 import '../../config/constants.dart';
 import '../../config/state.dart';
 import '../../presentation/theme.dart';
 import '../auth/service.dart';
-import '../auth/state.dart';
 
 class ProfilePicture extends StatelessWidget {
   final String? url;
