@@ -35,7 +35,10 @@ class RouteConfig {
         _RouterConstants.initial: (context, state, data) => BeamPage(
               title: _title,
               key: ValueKey('initial-page'),
-              child: UserPage(uid: 'w5LTjnPNCbRPIY5FovbDrcMw7gj2'), // TODO:
+              child: InitialPage(
+                loggedBuilder: (context) => HomePage(),
+                unloggedBuilder: (context) => SignPage(),
+              ),
             ),
         _RouterConstants.login: (context, state, data) => BeamPage(
               title: 'Entrar - $_title',

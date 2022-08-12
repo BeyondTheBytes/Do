@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 import '../../config/routes.dart';
@@ -10,6 +12,36 @@ import '../../presentation/theme.dart';
 import '../../presentation/utils.dart';
 import 'service.dart';
 import 'utils.dart';
+
+class InitialPage extends StatelessWidget {
+  final Widget Function(BuildContext) loggedBuilder;
+  final Widget Function(BuildContext) unloggedBuilder;
+  const InitialPage({
+    required this.loggedBuilder,
+    required this.unloggedBuilder,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<User?>(
+      future: FirebaseAuth.instance.authStateChanges().first,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Scaffold(
+            backgroundColor: AppColors.of(context).darkest,
+            body: Center(child: CustomLoading()),
+          );
+        }
+
+        final data = snapshot.data;
+        if (data == null) {
+          return unloggedBuilder(context);
+        }
+        return loggedBuilder(context);
+      },
+    );
+  }
+}
 
 class SignPage extends StatefulWidget {
   @override

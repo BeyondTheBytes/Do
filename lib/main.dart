@@ -30,6 +30,7 @@ class App extends StatelessWidget {
       title: 'Do.',
       theme: theme,
       color: theme.colorScheme.primary,
+      debugShowCheckedModeBanner: false,
       // route
       routeInformationParser: routeConfig.routeInformationParser,
       routerDelegate: routeConfig.routerDelegate,
