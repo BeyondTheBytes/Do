@@ -55,7 +55,7 @@ class EventsService {
                 event.date.compareTo(from.subtract(Duration(hours: 1))) >= 0,
           )
           .toList();
-    }).handleError((dynamic e) => print('xxx $e'));
+    });
   }
 
   Stream<List<Event>> asCreator(String uid) => collection

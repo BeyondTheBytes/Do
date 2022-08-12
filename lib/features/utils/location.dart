@@ -46,7 +46,7 @@ class LocationPermissionCard extends StatelessWidget {
         break;
       case LocationPermission.denied:
       case LocationPermission.deniedForever:
-        await Geolocator.openAppSettings();
+        await Geolocator.openLocationSettings();
         break;
     }
   }
@@ -65,11 +65,16 @@ class LocationWrapper extends StatefulWidget {
 class _LocationWrapperState extends State<LocationWrapper> {
   static Position? _lastCapturedPosition;
   LocationResult? _current;
-  late final subscription =
-      Geolocator.getPositionStream().listen(_updatePosition, onError: _onError);
+  late final StreamSubscription subscription;
 
   @override
   void initState() {
+    subscription = Geolocator.getPositionStream().listen(
+      _updatePosition,
+      onError: _onError,
+    );
+
+    Geolocator.requestPermission();
     _updatePosition(_lastCapturedPosition);
     super.initState();
   }
