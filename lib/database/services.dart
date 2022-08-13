@@ -28,8 +28,9 @@ class EventsService {
   Future<void> delete(String id) => collection.doc(id).delete();
   Future<void> participate(String eventId, String uid) =>
       collection.doc(eventId).update({_participateField(uid): true});
-  Future<void> unparticipate(String eventId, String uid) =>
-      collection.doc(eventId).update({_participateField(uid): null});
+  Future<void> unparticipate(String eventId, String uid) => collection
+      .doc(eventId)
+      .update({_participateField(uid): FieldValue.delete()});
 
   // HOME
 
@@ -127,12 +128,20 @@ class EventsService {
 
   Stream<List<Event>> asCreator(String uid) => collection
       .where(DataclassesDocFields.eventCreatorUid, isEqualTo: uid)
+      .orderBy(DataclassesDocFields.eventDate)
       .snapshots()
       .map((e) => e.docs.map((e) => Event(event: e.data(), id: e.id)).toList());
   Stream<List<Event>> asParticipant(String uid) => collection
-      .where(_participateField(uid), isEqualTo: true)
-      .snapshots()
-      .map((e) => e.docs.map((e) => Event(event: e.data(), id: e.id)).toList());
+          .where(_participateField(uid), isEqualTo: true)
+          .snapshots()
+          .map((e) {
+        final events =
+            e.docs.map((e) => Event(event: e.data(), id: e.id)).toList();
+        // sorting here because otherwise it would require a
+        // firestore composite index for each new user
+        events.sort((left, right) => left.date.compareTo(right.date));
+        return events;
+      });
 }
 
 class UserConfigService {

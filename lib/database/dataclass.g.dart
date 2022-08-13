@@ -15,9 +15,7 @@ EventData _$EventDataFromJson(Map<String, dynamic> json) => EventData(
       creatorUid: json['creatorUid'] as String,
       photoUrl: json['photoUrl'] as String,
       point: convertToPoint(json['point'] as Map<String, Object?>),
-      participants: (json['participants'] as Map<String, dynamic>?)?.map(
-        (k, e) => MapEntry(k, e as bool),
-      ),
+      participants: Map<String, bool>.from(json['participants'] as Map),
     );
 
 Map<String, dynamic> _$EventDataToJson(EventData instance) => <String, dynamic>{

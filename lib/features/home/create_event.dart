@@ -204,11 +204,12 @@ class _CreateEventDialogState extends State<CreateEventDialog> {
     final images = imagesSport(sport);
     final image = images[Random().nextInt(images.length)];
 
+    final uid = AppState.auth.currentUser!.uid;
     final event = EventData(
-      creatorUid: AppState.auth.currentUser!.uid,
+      creatorUid: uid,
       date: dateTime,
       observations: _observations.text,
-      participants: null,
+      participants: {uid: true},
       placeId: placeId,
       sport: sport,
       placeDescription: place.structuredFormatting!.mainText!,

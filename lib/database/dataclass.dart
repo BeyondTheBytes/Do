@@ -21,8 +21,6 @@ class DataclassesDocFields {
   static const String userPhone = 'phone';
 }
 
-enum EventRelation { participant, creator, none }
-
 enum Sport {
   @JsonValue('soccer')
   soccer,
@@ -132,14 +130,10 @@ class EventData {
     required this.creatorUid,
     required this.photoUrl,
     required this.point,
-    required Map<String, bool>? participants,
-  }) : participants = participants ?? {};
+    required this.participants,
+  });
 
-  EventRelation relation(String uid) {
-    if (uid == creatorUid) return EventRelation.creator;
-    if (participants.containsKey(uid)) return EventRelation.participant;
-    return EventRelation.none;
-  }
+  bool isParticipant(String uid) => participants.containsKey(uid);
 
   factory EventData.fromJson(Map<String, dynamic> json) =>
       _$EventDataFromJson(json);
