@@ -37,6 +37,7 @@ class SportTags extends StatelessWidget {
               color: AppColors.of(context).medium,
               shape: BoxShape.circle,
             ),
+            padding: EdgeInsets.all(2),
             child: Icon(Icons.add_rounded),
           ),
         ],
