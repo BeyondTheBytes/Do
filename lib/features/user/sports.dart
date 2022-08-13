@@ -122,7 +122,6 @@ class _ConfigSportsDialogState extends State<ConfigSportsDialog> {
     return Row(
       children: widgets
           .map((widget) => Expanded(child: widget))
-          .cast<Widget>()
           .withBetween(SizedBox(width: _iconsPadding))
           .toList(),
     );

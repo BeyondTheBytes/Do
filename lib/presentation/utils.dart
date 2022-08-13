@@ -9,8 +9,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../config/routes.dart';
 import 'theme.dart';
 
-extension ListExtensions<Widget> on Iterable<Widget> {
-  List<Widget> withBetween(Widget separation) {
+extension ListExtensions<J extends Widget> on Iterable<Widget> {
+  List<Widget> withBetween<T extends Widget>(T separation) {
     return [
       ...take(1),
       ...skip(1).expand((e) => [separation, e]).toList(),
