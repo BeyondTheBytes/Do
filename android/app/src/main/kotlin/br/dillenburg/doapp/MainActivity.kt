@@ -1,4 +1,4 @@
-package com.example.do_app
+package br.dillenburg.doapp
 
 import io.flutter.embedding.android.FlutterActivity
 

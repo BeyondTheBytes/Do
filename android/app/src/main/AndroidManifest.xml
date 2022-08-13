@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.do_app">
+    package="br.dillenburg.doapp">
    <application
         android:label="Do."
         android:name="${applicationName}"
