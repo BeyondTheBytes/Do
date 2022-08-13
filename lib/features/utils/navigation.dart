@@ -81,7 +81,6 @@ class _NavigationWrapperState extends State<NavigationWrapper> {
 
   @override
   void dispose() {
-    navigationController.dispose();
     super.dispose();
   }
 
