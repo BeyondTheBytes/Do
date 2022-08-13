@@ -36,7 +36,7 @@ class HomePage extends StatelessWidget {
               final userConfig = snapshot.data;
               final sports = userConfig?.sports;
               final location = locationResult?.successOrNull;
-              return StreamBuilder<List<Event>>(
+              return StreamBuilder<EventDays>(
                 stream: (sports == null || location == null)
                     ? null
                     : events.nearby(
@@ -56,7 +56,7 @@ class HomePage extends StatelessWidget {
   Widget _buildPage(
     BuildContext context,
     List<Sport>? sports,
-    List<Event>? events,
+    EventDays? events,
     Failure? locationFailure,
   ) {
     const errorPadding = EdgeInsets.only(top: 60);
@@ -102,13 +102,10 @@ class HomePage extends StatelessWidget {
               ),
             ),
           ),
-          SliverToBoxAdapter(child: SizedBox(height: 60)),
-          ...(events ?? [])
-              .map((e) => SliverToBoxAdapter(
-                    child: DefaultHorizontalPadding(
-                        child: EventHorizontalCard(event: e)),
-                  ))
-              .withBetween(SliverToBoxAdapter(child: SizedBox(height: 30))),
+          if (events != null) ...[
+            SliverToBoxAdapter(child: SizedBox(height: 50)),
+            ..._buildEvents(context, events),
+          ],
         ],
         if (locationFailure != null)
           SliverToBoxAdapter(
@@ -140,6 +137,39 @@ class HomePage extends StatelessWidget {
           ),
       ],
     );
+  }
+
+  List<Widget> _buildEvents(BuildContext context, EventDays events) {
+    final title = (String text) => Text(
+          text,
+          style: AppTexts.of(context).title3.copyWith(color: Colors.white),
+        );
+    final titleSeparator = () => SizedBox(height: 15);
+    final eventSeparator = () => SizedBox(height: 15);
+
+    return [
+      if (events.today.isNotEmpty) ...[
+        title('Hoje'),
+        titleSeparator(),
+        ...(events.today)
+            .map((e) => EventHorizontalCard(event: e))
+            .cast<Widget>()
+            .withBetween(eventSeparator()),
+      ],
+      if (events.today.isNotEmpty && events.today.isNotEmpty)
+        SizedBox(height: 60),
+      if (events.tomorrow.isNotEmpty) ...[
+        title('Amanhã'),
+        titleSeparator(),
+        ...(events.tomorrow)
+            .map((e) => EventHorizontalCard(event: e))
+            .cast<Widget>()
+            .withBetween(eventSeparator()),
+      ],
+    ]
+        .map((e) =>
+            SliverToBoxAdapter(child: DefaultHorizontalPadding(child: e)))
+        .toList();
   }
 }
 

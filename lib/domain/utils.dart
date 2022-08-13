@@ -2,6 +2,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:geolocator/geolocator.dart';
 
+class Pair<F, S> {
+  final F first;
+  final S second;
+  const Pair(this.first, this.second);
+}
+
 class DistanceBetween {
   static double inMeters(Position first, Position second) {
     final distanceInMeters = Geolocator.distanceBetween(
