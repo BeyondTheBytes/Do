@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -140,32 +138,26 @@ class HomePage extends StatelessWidget {
   }
 
   List<Widget> _buildEvents(BuildContext context, EventDays events) {
-    final title = (String text) => Text(
-          text,
-          style: AppTexts.of(context).title3.copyWith(color: Colors.white),
-        );
-    final titleSeparator = () => SizedBox(height: 15);
-    final eventSeparator = () => SizedBox(height: 15);
+    final buildDayEvents = (String title, List<Event> events) => <Widget>[
+          Text(
+            title,
+            style: AppTexts.of(context).title3.copyWith(color: Colors.white),
+          ),
+          SizedBox(height: 10),
+          ...(events)
+              .map((e) => EventHorizontalCard(
+                    event: e,
+                    showCompleteDate: false,
+                  ))
+              .withBetween(SizedBox(height: 15)),
+        ];
 
     return [
-      if (events.today.isNotEmpty) ...[
-        title('Hoje'),
-        titleSeparator(),
-        ...(events.today)
-            .map((e) => EventHorizontalCard(event: e))
-            .cast<Widget>()
-            .withBetween(eventSeparator()),
-      ],
+      if (events.today.isNotEmpty) ...buildDayEvents('Hoje', events.today),
       if (events.today.isNotEmpty && events.today.isNotEmpty)
         SizedBox(height: 60),
-      if (events.tomorrow.isNotEmpty) ...[
-        title('Amanhã'),
-        titleSeparator(),
-        ...(events.tomorrow)
-            .map((e) => EventHorizontalCard(event: e))
-            .cast<Widget>()
-            .withBetween(eventSeparator()),
-      ],
+      if (events.tomorrow.isNotEmpty)
+        ...buildDayEvents('Amanhã', events.tomorrow),
     ]
         .map((e) =>
             SliverToBoxAdapter(child: DefaultHorizontalPadding(child: e)))

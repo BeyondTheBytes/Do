@@ -60,6 +60,7 @@ class UserPage extends StatelessWidget {
                           top: 50,
                           left: pageHorizontalPadding,
                           right: pageHorizontalPadding,
+                          bottom: MediaQuery.of(context).padding.bottom + 10,
                         ),
                         child: _buildEvents(context, events),
                       );
@@ -127,9 +128,7 @@ class UserPage extends StatelessWidget {
                     Text(
                       description.isNotEmpty
                           ? description
-                          : """Conte-nos um pouco mais sobre você... """
-                              """Você pode dizer que topa abrir uma breja depois """
-                              """dos encontros ou como entrou nos esportes.""",
+                          : """Fale um pouco sobre você... """,
                       style: AppTexts.of(context).body1.copyWith(
                             color: description.isNotEmpty
                                 ? Colors.white
@@ -175,8 +174,13 @@ class UserPage extends StatelessWidget {
           'Eventos',
           style: AppTexts.of(context).title2.copyWith(color: Colors.white),
         ),
-        SizedBox(height: 40),
-        ...events.map((e) => EventHorizontalCard(event: e)),
+        SizedBox(height: 13),
+        ...events
+            .map((e) => EventHorizontalCard(
+                  event: e,
+                  showCompleteDate: true,
+                ))
+            .withBetween<Widget>(SizedBox(height: 20)),
       ],
     );
   }

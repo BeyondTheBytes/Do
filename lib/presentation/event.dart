@@ -13,14 +13,19 @@ import 'utils.dart';
 
 class EventHorizontalCard extends StatelessWidget {
   final Event event;
-  const EventHorizontalCard({required this.event});
+  final bool showCompleteDate;
+  const EventHorizontalCard({
+    required this.event,
+    required this.showCompleteDate,
+  });
 
   @override
   Widget build(BuildContext context) {
     final radius = BorderRadius.circular(10);
     return AspectRatio(
-      aspectRatio: 1.75,
+      aspectRatio: 1.4,
       child: Container(
+        clipBehavior: Clip.hardEdge,
         decoration: BoxDecoration(
           borderRadius: radius,
           boxShadow: [
@@ -30,82 +35,128 @@ class EventHorizontalCard extends StatelessWidget {
               spreadRadius: -2,
             ),
           ],
-          image: DecorationImage(
-            image: NetworkImage(event.photoUrl),
-            fit: BoxFit.cover,
-            alignment: Alignment.center,
-          ),
         ),
         child: Stack(
           children: [
             Container(
               decoration: BoxDecoration(
-                borderRadius: radius,
-                gradient: LinearGradient(
-                  colors: [
-                    Colors.black.withOpacity(0.2),
-                    Colors.black.withOpacity(0.2),
-                    Colors.black.withOpacity(0.65),
-                    Colors.black.withOpacity(0.9),
-                  ],
-                  stops: [0, 0.5, 0.6, 1],
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
+                color: Colors.grey[400],
+                image: DecorationImage(
+                  image: NetworkImage(event.photoUrl),
+                  fit: BoxFit.cover,
+                  alignment: Alignment.center,
                 ),
               ),
             ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Container(
-                  alignment: Alignment.bottomLeft,
-                  padding: EdgeInsets.all(10),
-                  child: _buildInfo(context),
-                ),
-              ],
-            ),
-            Transform.translate(
-              offset: Offset(4, -4),
-              child: Container(
-                alignment: Alignment.topRight,
-                child: _buildButtons(context),
-              ),
-            ),
+            _buildInfo(context),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildButtons(BuildContext context) {
-    final relation = event.relation(AppState.auth.currentUser!.uid);
-    final iconData = () {
-      switch (relation) {
-        case EventRelation.none:
-          return FontAwesomeIcons.arrowRightFromBracket;
-        case EventRelation.participant:
-        case EventRelation.creator:
-          return FontAwesomeIcons.check;
-      }
-    };
-    final backgroundcolor = () {
-      switch (relation) {
-        case EventRelation.none:
-          return AppColors.of(context).medium;
-        case EventRelation.participant:
-        case EventRelation.creator:
-          return AppColors.of(context).success;
-      }
-    };
+  static final _formatDoubleDigits = NumberFormat("00");
+  static final _dateFormat = DateFormat('dd/MM/yy');
+  Widget _buildInfo(BuildContext context) {
+    final amountParticipants = event.getParticipants.length;
+    return Row(
+      children: [
+        Expanded(
+          child: Container(
+            padding: EdgeInsets.all(10),
+            color: ColorTween(
+                    begin: Colors.white, end: AppColors.of(context).medium)
+                .lerp(0.1)!
+                .withOpacity(0.85),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Row(
+                  children: [
+                    DefaultTextStyle(
+                      style: AppTexts.of(context)
+                          .body1
+                          .copyWith(fontSize: 18, fontWeight: FontWeight.bold),
+                      child: Builder(builder: (context) {
+                        if (DateTime.now().compareTo(event.date) > 0) {
+                          return Text(
+                            'Agora',
+                            style:
+                                TextStyle(color: AppColors.of(context).success),
+                          );
+                        }
 
-    return EntirelyTappable(
-      onTap: () => _updateStatus(context, relation),
-      child: Container(
-        decoration: BoxDecoration(
-          color: backgroundcolor(),
-          borderRadius: BorderRadius.circular(2).copyWith(
-            topRight: Radius.circular(15),
+                        final hour =
+                            _formatDoubleDigits.format(event.date.hour);
+                        final minute =
+                            _formatDoubleDigits.format(event.date.minute);
+
+                        if (!showCompleteDate) {
+                          return Text('${hour}h ${minute}min');
+                        }
+                        return Text(
+                          """${_dateFormat.format(event.date)} - ${hour}h ${minute}min""",
+                        );
+                      }),
+                    ),
+                    if (!showCompleteDate)
+                      Text(
+                        """ ($amountParticipants confirmado${amountParticipants == 1 ? '' : 's'})""",
+                        style: TextStyle(color: Colors.grey[800]),
+                      ),
+                  ],
+                ),
+                SizedBox(height: 2),
+                Text(
+                  event.placeDescription,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w300,
+                    color: Colors.black,
+                  ),
+                ),
+                if (event.observations.isNotEmpty)
+                  Text(
+                    '(${event.observations})',
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w300,
+                      color: Colors.black,
+                    ),
+                  ),
+              ],
+            ),
           ),
+        ),
+        Container(
+          height: event.observations.isNotEmpty ? 80 : 63,
+          child: _buildButton(context),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildButton(BuildContext context) {
+    final canChange = DateTime.now().compareTo(event.date) < 0;
+
+    final isParticipant = event.isParticipant(AppState.auth.currentUser!.uid);
+    final iconData =
+        isParticipant ? FontAwesomeIcons.check : FontAwesomeIcons.arrowRight;
+    final backgroundcolor = isParticipant
+        ? AppColors.of(context).success
+        : AppColors.of(context).medium;
+
+    return GestureDetector(
+      onTap: !canChange ? () {} : () => _updateStatus(context),
+      child: Container(
+        width: 60,
+        height: 80,
+        decoration: BoxDecoration(
+          color: backgroundcolor,
           boxShadow: [
             BoxShadow(
               color: Colors.black,
@@ -115,114 +166,41 @@ class EventHorizontalCard extends StatelessWidget {
           ],
         ),
         padding: EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            SizedBox(width: 5),
-            Text(
-              (event.getParticipants.length + 1).toString(),
-              style: TextStyle(fontWeight: FontWeight.w400, fontSize: 18),
-            ),
-            Container(
-              margin: EdgeInsets.symmetric(horizontal: 9),
-              width: 0.5,
-              height: 18,
-              color: Colors.white,
-            ),
-            Icon(iconData(), size: 16),
-          ],
-        ),
+        child: Icon(iconData, size: 16),
       ),
     );
   }
 
-  static final _formatDoubleDigits = NumberFormat("00");
-  Widget _buildInfo(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.only(bottom: 4, left: 1),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          DefaultTextStyle(
-            style: AppTexts.of(context).title2.copyWith(color: Colors.white),
-            child: Row(
-              children: [
-                Builder(builder: (context) {
-                  if (DateTime.now().compareTo(event.date) > 0) {
-                    return Text(
-                      'Agora',
-                      style: TextStyle(color: AppColors.of(context).warning),
-                    );
-                  }
-                  final hour = _formatDoubleDigits.format(event.date.hour);
-                  final minute = _formatDoubleDigits.format(event.date.minute);
-                  return Text('${hour}h ${minute}min');
-                }),
-              ],
-            ),
-          ),
-          SizedBox(height: 2),
-          Builder(builder: (context) {
-            final observations =
-                event.observations.isEmpty ? '' : ' (${event.observations})';
-            return Text(
-              event.placeDescription + observations,
-              maxLines: 1,
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w300),
-            );
-          }),
-        ],
-      ),
-    );
-  }
+  Future<void> _updateStatus(BuildContext context) async {
+    final isParticipant = event.isParticipant(AppState.auth.currentUser!.uid);
 
-  Future<void> _updateStatus(
-    BuildContext context,
-    EventRelation relation,
-  ) async {
     final events = EventsService();
-
-    if (relation == EventRelation.creator && event.getParticipants.isEmpty) {
+    if (isParticipant) {
       final result = await showDialog<bool>(
         context: context,
         builder: (context) => _ConfirmationDialog(
-          title: 'Quer deletar o encontro?',
-          description: 'Não há pessoas confirmadas ainda...',
-          positiveAnswer: 'Sim',
-          negativeAnswer: 'Cancelar',
+          title: 'Deseja cancelar a inscrição?',
+          description: 'Que pena, volte quando puder...',
+          positiveAnswer: 'Sair',
+          negativeAnswer: 'Não',
         ),
       );
-      if (result == true) {
-        await events.delete(event.id);
-      }
-      return;
-    }
+      if (result != true) return;
 
-    switch (relation) {
-      case EventRelation.creator:
-      case EventRelation.participant:
-        final result = await showDialog<bool>(
-          context: context,
-          builder: (context) => _ConfirmationDialog(
-            title: 'Deseja cancelar a inscrição?',
-            description: 'Que pena, volte quando puder...',
-            positiveAnswer: 'Sair',
-            negativeAnswer: 'Não',
-          ),
-        );
-        if (result == true) {
-          await events.unparticipate(
-            event.id,
-            AppState.auth.currentUser!.uid,
-          );
-        }
-        break;
-      case EventRelation.none:
-        HapticFeedback.heavyImpact();
-        await events.participate(
+      if (isParticipant && event.getParticipants.length == 1) {
+        await events.delete(event.id);
+      } else {
+        await events.unparticipate(
           event.id,
           AppState.auth.currentUser!.uid,
         );
+      }
+    } else {
+      HapticFeedback.heavyImpact();
+      await events.participate(
+        event.id,
+        AppState.auth.currentUser!.uid,
+      );
     }
   }
 }
