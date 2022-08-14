@@ -24,14 +24,22 @@ class _NavigationPageController extends ChangeNotifier {
 }
 
 class NavigationButton extends StatelessWidget {
-  const NavigationButton({Key? key}) : super(key: key);
+  final bool includeVerticalPadding;
+  const NavigationButton() : includeVerticalPadding = true;
+  const NavigationButton.withoutPadding() : includeVerticalPadding = false;
+
+  static const paddingAbove = 15.0;
+  static const paddingBelow = 25.0;
+  static const size = 50.0;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.only(
-        top: MediaQuery.of(context).padding.top + 15,
-        bottom: 25,
+        top: !includeVerticalPadding
+            ? 0
+            : MediaQuery.of(context).padding.top + paddingAbove,
+        bottom: !includeVerticalPadding ? 0 : paddingBelow,
         left: pageHorizontalPadding - 15,
         right: pageHorizontalPadding - 15,
       ),
@@ -74,7 +82,7 @@ class _NavigationWrapperState extends State<NavigationWrapper> {
   @override
   void initState() {
     navigationController.addListener(() {
-      setState(() {});
+      if (mounted) setState(() {});
     });
     super.initState();
   }
@@ -197,7 +205,7 @@ class _NavigationWrapperState extends State<NavigationWrapper> {
                       context,
                       page: NavigationPage.profile,
                       icon: FontAwesomeIcons.solidUser,
-                      name: 'minha conta',
+                      name: 'meu perfil',
                     );
                 }
               }).withBetween(SizedBox(height: 10)),
