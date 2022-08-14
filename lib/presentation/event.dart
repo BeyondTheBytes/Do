@@ -79,24 +79,25 @@ class EventHorizontalCard extends StatelessWidget {
                           .body1
                           .copyWith(fontSize: 18, fontWeight: FontWeight.bold),
                       child: Builder(builder: (context) {
-                        if (DateTime.now().compareTo(event.date) > 0) {
-                          return Text(
-                            'Agora',
-                            style:
-                                TextStyle(color: AppColors.of(context).success),
-                          );
-                        }
-
                         final hour =
                             _formatDoubleDigits.format(event.date.hour);
                         final minute =
                             _formatDoubleDigits.format(event.date.minute);
 
-                        if (!showCompleteDate) {
+                        if (showCompleteDate) {
+                          return Text(
+                            """${_dateFormat.format(event.date)} - ${hour}h ${minute}min""",
+                          );
+                        }
+
+                        if (DateTime.now().compareTo(event.date) < 0) {
                           return Text('${hour}h ${minute}min');
                         }
+
                         return Text(
-                          """${_dateFormat.format(event.date)} - ${hour}h ${minute}min""",
+                          'Agora',
+                          style:
+                              TextStyle(color: AppColors.of(context).success),
                         );
                       }),
                     ),
