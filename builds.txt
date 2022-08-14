@@ -4,3 +4,10 @@ Build android Fri Aug 12 11:55:33 -03 2022
 Build android Fri Aug 12 12:13:33 -03 2022
 Build android Fri Aug 12 12:31:36 -03 2022
 Build android Fri Aug 12 12:32:43 -03 2022
+Build android Sun Aug 14 01:44:08 -03 2022
+Build android Sun Aug 14 01:48:56 -03 2022
+Build android Sun Aug 14 01:51:47 -03 2022
+Build android Sun Aug 14 01:54:32 -03 2022
+Build ios Sun Aug 14 01:57:49 -03 2022
+Build ios Sun Aug 14 02:45:59 -03 2022
+Build ios Sun Aug 14 02:59:23 -03 2022

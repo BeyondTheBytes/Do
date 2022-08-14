@@ -1,6 +1,9 @@
 <img src="readme/icon.png" width="128"/>
 
 **Create sport events to meet new people and practice more.**
+
+*Available at AppStore and PlayStore.*
+
 <br/>
 <br/>
 
@@ -13,6 +16,6 @@
 <br/>
 
 ### Information
-- Working MVP developed in less than a week
+- Working MVP developed in less than a week (44 hours project)
 - Idea, Design and Development by Luca Dillenburg
 - Figma Design: [https://www.figma.com/file/tmGShPQBkhL4BSPegtd85a/Do.-App?node-id=0%3A1](https://www.figma.com/file/tmGShPQBkhL4BSPegtd85a/Do.-App?node-id=0%3A1)
