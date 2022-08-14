@@ -17,7 +17,7 @@ class ProfilePicture extends StatelessWidget {
   final bool alternateNoPicture;
   const ProfilePicture({
     required this.url,
-    this.canEdit = false,
+    required this.canEdit,
     this.alternateNoPicture = false,
   });
 

@@ -9,12 +9,50 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../config/routes.dart';
 import 'theme.dart';
 
+double getAppBarMinHeight(BuildContext context) =>
+    MediaQuery.of(context).padding.top + 60;
+
 extension ListExtensions<J extends Widget> on Iterable<Widget> {
   List<Widget> withBetween<T extends Widget>(T separation) {
     return [
       ...take(1),
       ...skip(1).expand((e) => [separation, e]).toList(),
     ];
+  }
+}
+
+class BackgroundColorsWrapper extends StatelessWidget {
+  final Color topColor;
+  final Color bottomColor;
+  final Widget child;
+  const BackgroundColorsWrapper({
+    required this.topColor,
+    required this.bottomColor,
+    required this.child,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: _buildBackground(context),
+      child: child,
+    );
+  }
+
+  BoxDecoration _buildBackground(BuildContext context) {
+    return BoxDecoration(
+      gradient: LinearGradient(
+        colors: [
+          topColor,
+          topColor,
+          bottomColor,
+          bottomColor,
+        ],
+        stops: [0.0, .5, .5, 1],
+        begin: const FractionalOffset(0.0, 0.0),
+        end: const FractionalOffset(0.0, 1.0),
+      ),
+    );
   }
 }
 
@@ -149,6 +187,12 @@ class IconErrorWidget extends StatelessWidget {
   }
 }
 
+void collapseKeyboard(BuildContext context) {
+  if (!FocusScope.of(context).hasPrimaryFocus) {
+    FocusScope.of(context).unfocus();
+  }
+}
+
 class DismissibleKeyboardWrapper extends StatelessWidget {
   final Widget child;
   const DismissibleKeyboardWrapper({required this.child});
@@ -156,11 +200,7 @@ class DismissibleKeyboardWrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        if (!FocusScope.of(context).hasPrimaryFocus) {
-          FocusScope.of(context).unfocus();
-        }
-      },
+      onTap: () => collapseKeyboard(context),
       child: child,
     );
   }
