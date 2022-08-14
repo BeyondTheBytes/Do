@@ -6,7 +6,6 @@ import '../features/home/page.dart';
 import '../features/user/page.dart';
 import '../features/utils/navigation.dart';
 import '../presentation/pages.dart';
-import 'state.dart';
 
 /// DEFINITIONS
 
