@@ -44,7 +44,10 @@ class _CreateEventDialogState extends State<CreateEventDialog> {
     const fieldsPadding = SizedBox(height: 10, width: 10);
     final selectedTime = _selectedTime;
     return GestureDetector(
-      onTap: widget.entryController.remove,
+      onTap: () {
+        collapseKeyboard(context);
+        widget.entryController.remove();
+      },
       child: CustomDialog(
         title: 'Novo Evento',
         child: Padding(

@@ -27,7 +27,8 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return LocationWrapper(
-      builder: (context, locationResult) => _HomeWrapper(
+      builder: (context, locationResult) => Scaffold(
+        backgroundColor: AppColors.of(context).darkest,
         body: StreamBuilder<UserConfig>(
             stream: userConfig.stream(AppState.auth.currentUser!.uid),
             builder: (context, snapshot) {
@@ -47,6 +48,10 @@ class HomePage extends StatelessWidget {
                     snapshot.data, locationResult?.failureOrNull),
               );
             }),
+        floatingActionButton: FloatingActionButton(
+          child: Icon(FontAwesomeIcons.plus, color: Colors.white),
+          onPressed: () => _createEvent(context),
+        ),
       ),
     );
   }
@@ -163,44 +168,23 @@ class HomePage extends StatelessWidget {
             SliverToBoxAdapter(child: DefaultHorizontalPadding(child: e)))
         .toList();
   }
-}
-
-// ////////////////////////////////////////////////////////////////
-// WRAPPER
-// ////////////////////////////////////////////////////////////////
-
-class _HomeWrapper extends StatelessWidget {
-  final Widget body;
-  _HomeWrapper({required this.body});
 
   final entryController = EntryController();
-
-  @override
-  Widget build(BuildContext context) {
-    return DismissibleKeyboardWrapper(
-      child: Scaffold(
-        backgroundColor: AppColors.of(context).darkest,
-        body: body,
-        floatingActionButton: FloatingActionButton(
-          child: Icon(FontAwesomeIcons.plus, color: Colors.white),
-          onPressed: () => showDialog<void>(
-            context: context,
-            builder: (context) => WillPopScope(
-              onWillPop: () async {
-                entryController.remove();
-                return true;
-              },
-              child: DialogWrapper(
-                child: CreateEventDialog(
-                  entryController: entryController,
-                  onAdd: () {
-                    AppRouter.of(context).popDialog();
-                    SuccessMessage.of(context)
-                        .show('Evento Criado com Sucesso');
-                  },
-                ),
-              ),
-            ),
+  void _createEvent(BuildContext context) {
+    showDialog<void>(
+      context: context,
+      builder: (context) => WillPopScope(
+        onWillPop: () async {
+          entryController.remove();
+          return true;
+        },
+        child: DialogWrapper(
+          child: CreateEventDialog(
+            entryController: entryController,
+            onAdd: () {
+              AppRouter.of(context).popDialog();
+              SuccessMessage.of(context).show('Evento Criado com Sucesso');
+            },
           ),
         ),
       ),
