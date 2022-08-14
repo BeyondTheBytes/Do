@@ -1,3 +1,6 @@
+import 'dart:math';
+import 'dart:ui';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -11,6 +14,7 @@ import '../../domain/structures.dart';
 import '../../presentation/event.dart';
 import '../../presentation/theme.dart';
 import '../../presentation/utils.dart';
+import '../auth/utils.dart';
 import '../user/picture.dart';
 import '../user/sports.dart';
 import '../utils/location.dart';
@@ -65,35 +69,12 @@ class HomePage extends StatelessWidget {
     const errorPadding = EdgeInsets.only(top: 60);
     return CustomScrollView(
       slivers: [
-        SliverToBoxAdapter(child: NavigationButton()),
-        SliverToBoxAdapter(
-          child: DefaultHorizontalPadding(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Do.',
-                  style: AppTexts.of(context)
-                      .title1
-                      .copyWith(color: Colors.white, height: 1),
-                ),
-                Container(
-                  width: 70,
-                  height: 70,
-                  child: StreamBuilder<User?>(
-                    stream: AppState.auth.userStream,
-                    builder: (context, snapshot) {
-                      final user = snapshot.data;
-                      return ProfilePicture(
-                        canEdit: user?.photoURL == null,
-                        url: user?.photoURL,
-                        alternateNoPicture: true,
-                      );
-                    },
-                  ),
-                ),
-              ],
-            ),
+        SliverPersistentHeader(
+          pinned: true,
+          floating: false,
+          delegate: _SliverAppBar(
+            maxExtent: getAppBarMinHeight(context) + 100,
+            minExtent: getAppBarMinHeight(context),
           ),
         ),
         if (sports != null) ...[
@@ -189,5 +170,95 @@ class HomePage extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+class _SliverAppBar extends SliverPersistentHeaderDelegate {
+  final double minExtent;
+  final double maxExtent;
+  _SliverAppBar({
+    required this.minExtent,
+    required this.maxExtent,
+  });
+
+  @override
+  Widget build(
+    BuildContext context,
+    double shrinkOffset,
+    bool overlapsContent,
+  ) {
+    final percClosed = min(shrinkOffset / (maxExtent - minExtent), 1.0);
+
+    final buttonTop = NavigationButton.paddingAbove - percClosed * 10;
+
+    final titleLeft = percClosed * NavigationButton.size;
+    final titleTop = lerpDouble(
+      NavigationButton.paddingAbove +
+          NavigationButton.size +
+          NavigationButton.paddingBelow,
+      10,
+      percClosed,
+    )!;
+    final titleSize = AppTexts.of(context).title1.fontSize! - percClosed * 20.0;
+    final logoOpacity = max(0.0, 1.0 - percClosed * 5);
+
+    return Container(
+      color: ColorTween(
+        begin: AppColors.of(context).darkest,
+        end: Colors.black,
+      ).lerp(percClosed / 2),
+      padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
+      child: Stack(
+        children: [
+          Positioned(
+            top: buttonTop,
+            child: NavigationButton.withoutPadding(),
+          ),
+          Positioned(
+            left: titleLeft,
+            top: titleTop,
+            child: Container(
+              width: MediaQuery.of(context).size.width - titleLeft,
+              child: DefaultHorizontalPadding(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Do.',
+                      style: AppTexts.of(context).title1.copyWith(
+                            fontSize: titleSize,
+                            color: Colors.white,
+                            height: 1,
+                          ),
+                    ),
+                    if (logoOpacity != 0)
+                      Opacity(
+                        opacity: logoOpacity,
+                        child: Container(
+                          width: 70,
+                          height: 70,
+                          child: UserProvider(
+                            builder: (context, user) => ProfilePicture(
+                              canEdit: user.photoURL == null,
+                              url: user.photoURL,
+                              alternateNoPicture: true,
+                            ),
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  @override
+  bool shouldRebuild(_SliverAppBar oldDelegate) {
+    // TODO: improve performance
+    return false;
   }
 }
