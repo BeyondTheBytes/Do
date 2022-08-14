@@ -14,9 +14,9 @@ class _RouterConstants {
   static const initial = '/';
   static const home = '/home';
   static const login = '/login';
-  static const user = _ParameterUrl(baseUrl: '/user', pathParam: 'user');
 }
 
+// ignore: unused_element
 class _ParameterUrl {
   final String baseUrl;
   final String pathParam;
@@ -52,14 +52,6 @@ class RouteConfig {
               key: ValueKey('home-page'),
               child: _signedPage(),
             ),
-        _RouterConstants.user.resolveUrl: (context, state, data) {
-          final uid = state.pathParameters[_RouterConstants.user.pathParam];
-          return BeamPage(
-            title: 'User - $_title',
-            key: ValueKey('user-page'),
-            child: (uid == null) ? UnknownRoute() : UserPage(uid: uid),
-          );
-        },
       },
     ),
     initialPath: _RouterConstants.initial,
@@ -72,8 +64,7 @@ class RouteConfig {
   static Widget _signedPage() => NavigationWrapper(
         pages: {
           NavigationPage.home: (context) => HomePage(),
-          NavigationPage.profile: (context) =>
-              UserPage(uid: AppState.auth.currentUser!.uid),
+          NavigationPage.profile: (context) => UserPage(),
         },
       );
 }
@@ -90,10 +81,6 @@ class AppRouter {
   void pushReplacementHome() {
     Beamer.of(context)
         .beamToReplacementNamed(_RouterConstants.home, stacked: false);
-  }
-
-  void pushUserPage(String uid) {
-    Beamer.of(context).beamToNamed(_RouterConstants.user.withParam(uid));
   }
 
   void popDialog<T extends Object?>([T? param]) {
