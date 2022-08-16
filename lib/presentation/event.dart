@@ -22,35 +22,33 @@ class EventHorizontalCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final radius = BorderRadius.circular(10);
-    return AspectRatio(
-      aspectRatio: 1.4,
-      child: Container(
-        clipBehavior: Clip.hardEdge,
-        decoration: BoxDecoration(
-          borderRadius: radius,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.8),
-              blurRadius: 3,
-              spreadRadius: -2,
-            ),
-          ],
-        ),
-        child: Stack(
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.grey[400],
-                image: DecorationImage(
-                  image: NetworkImage(event.photoUrl),
-                  fit: BoxFit.cover,
-                  alignment: Alignment.center,
-                ),
+    return Container(
+      clipBehavior: Clip.hardEdge,
+      height: MediaQuery.of(context).size.height * 0.25,
+      decoration: BoxDecoration(
+        borderRadius: radius,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.8),
+            blurRadius: 3,
+            spreadRadius: -2,
+          ),
+        ],
+      ),
+      child: Stack(
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.grey[400],
+              image: DecorationImage(
+                image: NetworkImage(event.photoUrl),
+                fit: BoxFit.cover,
+                alignment: Alignment.center,
               ),
             ),
-            _buildInfo(context),
-          ],
-        ),
+          ),
+          _buildInfo(context),
+        ],
       ),
     );
   }

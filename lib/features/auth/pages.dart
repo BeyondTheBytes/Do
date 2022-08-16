@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -66,15 +67,22 @@ class _SignPageState extends State<SignPage> {
 
   @override
   Widget build(BuildContext context) {
-    final logoIcon = MediaQuery.of(context).size.width * 0.35;
+    const maxWidth = 600;
+    final contentSize = min(MediaQuery.of(context).size.width, maxWidth);
+
     return DismissibleKeyboardWrapper(
       child: Scaffold(
         backgroundColor: AppColors.of(context).medium,
         body: Center(
           child: SingleChildScrollView(
-            child: Container(
-              padding: EdgeInsets.all(25),
-              child: Stack(
+            padding: EdgeInsets.symmetric(
+                  horizontal:
+                      (MediaQuery.of(context).size.width - contentSize) / 2,
+                ) +
+                EdgeInsets.all(25),
+            child: LayoutBuilder(builder: (context, constraints) {
+              final logoIcon = constraints.maxWidth * 0.35;
+              return Stack(
                 children: [
                   Container(
                     padding: EdgeInsets.only(top: logoIcon * 0.7),
@@ -101,8 +109,8 @@ class _SignPageState extends State<SignPage> {
                     ),
                   ),
                 ],
-              ),
-            ),
+              );
+            }),
           ),
         ),
       ),
