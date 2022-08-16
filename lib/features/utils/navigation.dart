@@ -226,7 +226,9 @@ class _NavigationWrapperState extends State<NavigationWrapper> {
                     Colors.white,
                   ),
                 ),
-            onPressed: _signOut,
+            onPressed: () {
+              _signOut(context);
+            },
           ),
         ),
       ],
@@ -273,10 +275,74 @@ class _NavigationWrapperState extends State<NavigationWrapper> {
     );
   }
 
-  void _signOut() {
-    AppRouter.of(context).pushReplacementSign();
-    navigationController.setFullpage(false);
-    UserAuthService().signOut();
+  void _signOut(BuildContext context) async {
+    const signOutAction = 1;
+    const deleteAccountAction = 2;
+
+    final authService = UserAuthService();
+    final response = await showDialog<int>(
+      context: context,
+      builder: (context) => DialogWrapper(
+        child: CustomDialog(
+          title: 'Deseja sair?',
+          child: Column(
+            children: [
+              CustomButton(
+                child: Text('Sair'),
+                onPressed: () => AppRouter.of(context).popDialog(signOutAction),
+              ),
+              CustomButton(
+                child: Text('Excluir minha conta'),
+                style: AppButton.of(context).outlined,
+                onPressed: () =>
+                    AppRouter.of(context).popDialog(deleteAccountAction),
+              ),
+              CustomButton(
+                child: Text('Cancelar'),
+                style: AppButton.of(context).outlined,
+                onPressed: () => AppRouter.of(context).popDialog(),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+
+    if (response == null) return;
+
+    if (response == signOutAction) {
+      AppRouter.of(context).pushReplacementSign();
+      navigationController.setFullpage(false);
+      authService.signOut();
+    } else {
+      final performAction = await showDialog<bool>(
+        context: context,
+        builder: (context) => DialogWrapper(
+          child: CustomDialog(
+            title: 'Excluir sua conta?',
+            child: Column(
+              children: [
+                CustomButton(
+                  child: Text('Excluir minha conta'),
+                  onPressed: () => AppRouter.of(context).popDialog(true),
+                ),
+                CustomButton(
+                  child: Text('Cancelar'),
+                  onPressed: () => AppRouter.of(context).popDialog(false),
+                  style: AppButton.of(context).outlined,
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+      if (performAction == true) {
+        AppRouter.of(context).pushReplacementSign();
+        navigationController.setFullpage(false);
+        SuccessMessage.of(context).show('Sua conta foi excluída.');
+        await authService.deleteAccount();
+      }
+    }
   }
 
   void _selectPage(NavigationPage page) {
