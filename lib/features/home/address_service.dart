@@ -24,7 +24,7 @@ class AddressService {
         /// omitted, straight-line distance will not be returned.
         origin: latlong,
 
-        radius: 50000,
+        radius: Constants.kmRadius * 1000,
         strictbounds: true,
 
         /// The point around which you wish to retrieve place information.

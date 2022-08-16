@@ -14,6 +14,7 @@ class Env {
 
 class Constants {
   static const proxyServer = 'legumo-proxy.herokuapp.com';
+  static const kmRadius = 40;
 }
 
 class Assets {

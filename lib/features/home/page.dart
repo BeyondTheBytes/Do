@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 
+import '../../config/constants.dart';
 import '../../config/routes.dart';
 import '../../config/state.dart';
 import '../../database/dataclass.dart';
@@ -19,9 +20,6 @@ import '../user/sports.dart';
 import '../utils/location.dart';
 import '../utils/navigation.dart';
 import 'create_event.dart';
-
-// TODO: let user edit radius
-const _radius = 40.0;
 
 class HomePage extends StatelessWidget {
   final userConfig = UserConfigService();
@@ -44,7 +42,7 @@ class HomePage extends StatelessWidget {
                     : events.nearby(
                         sports,
                         GeoFirePoint(location.latitude, location.longitude),
-                        radius: _radius,
+                        radius: Constants.kmRadius.toDouble(),
                         from: DateTime.now(),
                       ),
                 builder: (context, snapshot) => _buildPage(context, sports,
