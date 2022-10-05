@@ -5,7 +5,7 @@ description: Create public events to practice sports with other people.
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none'
 
-version: 1.0.0+2
+version: 1.0.0+3
 
 flutter_native_splash:
   color: "#202233"
