@@ -8,21 +8,19 @@ import 'package:geolocator/geolocator.dart';
 import '../../domain/structures.dart';
 import '../../domain/utils.dart';
 import '../../presentation/button.dart';
-import '../../presentation/theme.dart';
 import '../../presentation/utils.dart';
-
-const minMetersDistanceUpdate = 100;
 
 class LocationPermissionCard extends StatelessWidget {
   final Failure failure;
-  const LocationPermissionCard({required this.failure});
+  final Function() onAccept;
+  const LocationPermissionCard({required this.failure, required this.onAccept});
 
   @override
   Widget build(BuildContext context) {
     return IconErrorWidget(
       icon: Icon(
         FontAwesomeIcons.triangleExclamation,
-        color: AppColors.of(context).warning,
+        color: Colors.grey[300],
         size: IconErrorWidget.iconSize,
       ),
       title: 'Habilite a Localização',
@@ -43,6 +41,7 @@ class LocationPermissionCard extends StatelessWidget {
       case LocationPermission.always:
       case LocationPermission.whileInUse:
       case LocationPermission.unableToDetermine:
+        onAccept();
         break;
       case LocationPermission.denied:
       case LocationPermission.deniedForever:
@@ -54,63 +53,31 @@ class LocationPermissionCard extends StatelessWidget {
 
 typedef LocationResult = Either<Position, Failure>?;
 
-class LocationWrapper extends StatefulWidget {
+class LocationWrapper extends StatelessWidget {
   final Widget Function(BuildContext context, LocationResult info) builder;
   LocationWrapper({required this.builder});
 
-  @override
-  State<LocationWrapper> createState() => _LocationWrapperState();
-}
-
-class _LocationWrapperState extends State<LocationWrapper> {
-  static Position? _lastCapturedPosition;
-  LocationResult? _current;
-  late final StreamSubscription subscription;
-
-  @override
-  void initState() {
-    subscription = Geolocator.getPositionStream().listen(
-      _updatePosition,
-      onError: _onError,
-    );
-
-    Geolocator.requestPermission();
-    _updatePosition(_lastCapturedPosition);
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    subscription.cancel();
-    super.dispose();
-  }
-
-  void _updatePosition(Position? newPosition) {
-    if (newPosition == null) return;
-
-    final lastPosition = _current?.successOrNull;
-    if (lastPosition == null ||
-        DistanceBetween.inMeters(newPosition, lastPosition) >
-            minMetersDistanceUpdate) {
-      _lastCapturedPosition = newPosition;
-      setState(() {
-        _current = Either.success(newPosition);
-      });
-    }
-  }
-
-  void _onError(Object? error) {
-    setState(() {
-      _current = Either.failure(
-        Failure(
-          """Não conseguimos obter sua localização. Por favor, cheque as permissões do aplicativo.""",
-        ),
-      );
-    });
-  }
+  static const _errorMessage =
+      """Não conseguimos obter sua localização. Por favor, cheque as permissões do aplicativo.""";
 
   @override
   Widget build(BuildContext context) {
-    return widget.builder(context, _current);
+    return FutureBuilder<Position>(
+      future: Geolocator.getCurrentPosition(),
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          return builder(
+            context,
+            Either.failure(Failure(_errorMessage)),
+          );
+        }
+
+        final newPosition = snapshot.data;
+        return builder(
+          context,
+          newPosition == null ? null : Either.success(newPosition),
+        );
+      },
+    );
   }
 }

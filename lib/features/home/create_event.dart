@@ -230,7 +230,7 @@ class _CreateEventDialogState extends State<CreateEventDialog> {
   }
 }
 
-class _LocalSearch extends StatelessWidget {
+class _LocalSearch extends StatefulWidget {
   final Function(AutocompletePrediction) onSelect;
   final AutocompletePrediction? selected;
   final EntryController entryController;
@@ -240,15 +240,25 @@ class _LocalSearch extends StatelessWidget {
     required this.entryController,
   });
 
+  @override
+  State<_LocalSearch> createState() => _LocalSearchState();
+}
+
+class _LocalSearchState extends State<_LocalSearch> {
   final addressService = AddressService();
 
   @override
   Widget build(BuildContext context) {
     return LocationWrapper(builder: (context, locationResult) {
-      final selected = this.selected;
+      final selected = widget.selected;
 
       final failure = locationResult?.failureOrNull;
-      if (failure != null) return LocationPermissionCard(failure: failure);
+      if (failure != null) {
+        return LocationPermissionCard(
+          failure: failure,
+          onAccept: () => setState(() {}),
+        );
+      }
 
       final location = locationResult?.successOrNull;
       final text =
@@ -273,7 +283,7 @@ class _LocalSearch extends StatelessWidget {
     BuildContext context,
     List<AutocompletePrediction> predictions,
   ) {
-    entryController.remove();
+    widget.entryController.remove();
 
     if (predictions.isEmpty) return;
 
@@ -290,7 +300,7 @@ class _LocalSearch extends StatelessWidget {
         ),
       ),
     );
-    entryController.insert(context, newEntry);
+    widget.entryController.insert(context, newEntry);
   }
 
   Widget _buildPredictions(
@@ -323,7 +333,7 @@ class _LocalSearch extends StatelessWidget {
 
   Widget itemBuilder(BuildContext context, AutocompletePrediction prediction) {
     return EntirelyTappable(
-      onTap: () => onSelect(prediction),
+      onTap: () => widget.onSelect(prediction),
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
         width: double.infinity,

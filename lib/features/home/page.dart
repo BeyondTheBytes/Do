@@ -21,8 +21,14 @@ import '../utils/location.dart';
 import '../utils/navigation.dart';
 import 'create_event.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
   final userConfig = UserConfigService();
+
   final events = EventsService();
 
   @override
@@ -92,7 +98,10 @@ class HomePage extends StatelessWidget {
           SliverToBoxAdapter(
             child: Padding(
               padding: errorPadding,
-              child: LocationPermissionCard(failure: locationFailure),
+              child: LocationPermissionCard(
+                failure: locationFailure,
+                onAccept: () => setState(() {}),
+              ),
             ),
           ),
         if (events != null && events.isEmpty)
@@ -148,6 +157,7 @@ class HomePage extends StatelessWidget {
   }
 
   final entryController = EntryController();
+
   void _createEvent(BuildContext context) {
     showDialog<void>(
       context: context,
