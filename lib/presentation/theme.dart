@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 const pageHorizontalPadding = 35.0;
 
-final _appColor = AppColors._(
+final appColor = AppColors._(
   darkest: Color(0xff202233),
   dark: Color(0xff161E5D),
   medium: Color(0xff4657D5),
@@ -11,14 +11,14 @@ final _appColor = AppColors._(
 );
 final _colorScheme = ColorScheme(
   brightness: Brightness.dark,
-  primary: _appColor.medium,
+  primary: appColor.medium,
   onPrimary: Colors.white,
-  secondary: _appColor.medium,
+  secondary: appColor.medium,
   onSecondary: Colors.black,
-  background: _appColor.darkest,
+  background: appColor.darkest,
   onBackground: Colors.white,
   surface: Colors.white,
-  onSurface: _appColor.darkest,
+  onSurface: appColor.darkest,
   error: Color(0xffF85454),
   onError: Colors.white,
 );
@@ -29,28 +29,28 @@ final _primarySwatch = MaterialColor(
 
 final _headlineFamily = 'Ultra';
 final _bodyFamily = 'Inter';
-final _appText = AppTexts._(
+final appText = AppTexts._(
   kicker: TextStyle(
     fontFamily: _bodyFamily,
     fontSize: 20,
     fontStyle: FontStyle.italic,
     fontWeight: FontWeight.w100,
-    color: _appColor.darkest,
+    color: appColor.darkest,
   ),
   title1: TextStyle(
     fontFamily: _headlineFamily,
     fontSize: 58,
-    color: _appColor.darkest,
+    color: appColor.darkest,
   ),
   title2: TextStyle(
     fontFamily: _headlineFamily,
     fontSize: 32,
-    color: _appColor.darkest,
+    color: appColor.darkest,
   ),
   title3: TextStyle(
     fontFamily: _headlineFamily,
     fontSize: 24,
-    color: _appColor.darkest,
+    color: appColor.darkest,
   ),
   subtitle1: TextStyle(
     fontFamily: _bodyFamily,
@@ -84,8 +84,8 @@ final _labelStyle = TextStyle(
   color: Colors.grey[600],
 );
 final _textTheme = TextTheme(
-  bodyText1: _appText.body1,
-  subtitle1: _appText.body1, // input text theme
+  bodyText1: appText.body1,
+  subtitle1: appText.body1, // input text theme
 );
 
 final _inputTheme = InputDecorationTheme(
@@ -109,47 +109,47 @@ final _buttonShape = MaterialStateProperty.all(
   ),
 );
 final _filledButton = ButtonStyle(
-  backgroundColor: MaterialStateProperty.all(_appColor.medium),
+  backgroundColor: MaterialStateProperty.all(appColor.medium),
   overlayColor: MaterialStateProperty.all(Colors.grey[800]!.withOpacity(0.1)),
   shape: _buttonShape,
   foregroundColor: MaterialStateProperty.all(Colors.white),
 );
 final _outlinedButton = ButtonStyle(
   backgroundColor: MaterialStateProperty.all(Colors.white),
-  overlayColor: MaterialStateProperty.all(_appColor.dark.withOpacity(0.1)),
+  overlayColor: MaterialStateProperty.all(appColor.dark.withOpacity(0.1)),
   shape: _buttonShape,
-  foregroundColor: MaterialStateProperty.all(_appColor.medium),
+  foregroundColor: MaterialStateProperty.all(appColor.medium),
 );
 final _appButton = AppButton._(
   largeFilled: _filledButton.copyWith(
-    textStyle: MaterialStateProperty.all(_appText.button1),
+    textStyle: MaterialStateProperty.all(appText.button1),
     padding: MaterialStateProperty.all(
       EdgeInsets.symmetric(horizontal: 25, vertical: 12),
     ),
   ),
   filled: _filledButton.copyWith(
-    textStyle: MaterialStateProperty.all(_appText.button2),
+    textStyle: MaterialStateProperty.all(appText.button2),
   ),
   largeOutlined: _outlinedButton.copyWith(
-    textStyle: MaterialStateProperty.all(_appText.button1),
+    textStyle: MaterialStateProperty.all(appText.button1),
     padding: MaterialStateProperty.all(
       EdgeInsets.symmetric(horizontal: 25, vertical: 12),
     ),
   ),
   outlined: _outlinedButton.copyWith(
-    textStyle: MaterialStateProperty.all(_appText.button2),
+    textStyle: MaterialStateProperty.all(appText.button2),
   ),
   text: ButtonStyle(
-    textStyle: MaterialStateProperty.all(_appText.button1),
+    textStyle: MaterialStateProperty.all(appText.button1),
     shape: _buttonShape,
   ),
 );
 
 final theme = ThemeData(
-  extensions: [_appColor, _appText, _appButton],
+  extensions: [appColor, appText, _appButton],
   colorScheme: _colorScheme,
   primarySwatch: _primarySwatch,
-  shadowColor: _appColor.darkest,
+  shadowColor: appColor.darkest,
   textTheme: _textTheme,
   inputDecorationTheme: _inputTheme,
   textButtonTheme: TextButtonThemeData(style: _appButton.text),
@@ -175,8 +175,7 @@ class AppColors extends ThemeExtension<AppColors> {
     required this.success,
   });
 
-  static AppColors of(BuildContext context) =>
-      Theme.of(context).extension<AppColors>()!;
+  static AppColors of(BuildContext context) => Theme.of(context).extension<AppColors>()!;
 
   /// Shouldn't be called
   @override
@@ -208,8 +207,7 @@ class AppTexts extends ThemeExtension<AppTexts> {
     required this.button2,
   });
 
-  static AppTexts of(BuildContext context) =>
-      Theme.of(context).extension<AppTexts>()!;
+  static AppTexts of(BuildContext context) => Theme.of(context).extension<AppTexts>()!;
 
   /// Shouldn't be called
   @override
@@ -235,8 +233,7 @@ class AppButton extends ThemeExtension<AppButton> {
     required this.largeOutlined,
   });
 
-  static AppButton of(BuildContext context) =>
-      Theme.of(context).extension<AppButton>()!;
+  static AppButton of(BuildContext context) => Theme.of(context).extension<AppButton>()!;
 
   /// Shouldn't be called
   @override
