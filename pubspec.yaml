@@ -54,4 +54,4 @@ flutter:
           weight: 600
     - family: Ultra
       fonts:
-        - asset: assets/fonts/Ultra/Ultra-Regular.ttf
+        - asset: lib/fonts/Ultra/Ultra-Regular.ttf
