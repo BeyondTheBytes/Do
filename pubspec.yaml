@@ -28,48 +28,18 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  cupertino_icons: ^1.0.2
-  firebase_core: ^2.4.1
-  cloud_firestore: ^4.3.1
-  geolocator: ^9.0.1
-  google_fonts: ^3.0.1
-  provider: ^6.0.3
-  rxdart: ^0.27.5
-  geoflutterfire:
-    git:
-      url: https://github.com/LucaDillenburg/GeoFlutterFire.git
-      hash: f4651f023066537f6677e934da531419b266861c
-  json_annotation: ^4.6.0
-  google_place: ^0.4.7
-  firebase_auth: ^4.2.5
-  font_awesome_flutter: ^10.1.0
-  freezed_annotation: ^2.1.0
-  email_validator: ^2.1.17
-  beamer: ^1.5.0
-  flutter_svg: ^1.1.3
-  auto_size_text: ^3.0.0
-  mask_text_input_formatter: ^2.4.0
-  flutter_dotenv: ^5.0.2
-  image_picker: ^0.8.5+3
-  firebase_storage: ^11.0.10
-  tinycolor2: ^3.0.1
+  portfolio_commons:
+    path: /Users/lucadillenburg/Development/Projects/AppsPortfolio/packages/portfolio_commons
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  build_runner: ^2.2.0
-  json_serializable: ^6.3.1
-  effective_dart: ^1.3.2
-  freezed: ^2.1.0+1
-  mocktail: ^0.3.0
-  flutter_launcher_icons: ^0.10.0
-  flutter_native_splash: ^2.2.7
-  change_app_package_name: ^1.1.0
+  portfolio_dev_commons:
+    path: /Users/lucadillenburg/Development/Projects/AppsPortfolio/packages/portfolio_dev_commons
 
 flutter:
   uses-material-design: true
   assets:
-    - .env
     - assets/img/picture-inverted.svg
     - assets/img/picture.svg
     - assets/img/menu.svg
