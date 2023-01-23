@@ -29,16 +29,19 @@ dependencies:
   flutter:
     sdk: flutter
   cupertino_icons: ^1.0.2
-  firebase_core: ^1.20.0
-  cloud_firestore: ^3.4.3
+  firebase_core: ^2.4.1
+  cloud_firestore: ^4.3.1
   geolocator: ^9.0.1
   google_fonts: ^3.0.1
   provider: ^6.0.3
   rxdart: ^0.27.5
-  geoflutterfire: ^3.0.3
+  geoflutterfire:
+    git:
+      url: https://github.com/LucaDillenburg/GeoFlutterFire.git
+      hash: f4651f023066537f6677e934da531419b266861c
   json_annotation: ^4.6.0
   google_place: ^0.4.7
-  firebase_auth: ^3.6.2
+  firebase_auth: ^4.2.5
   font_awesome_flutter: ^10.1.0
   freezed_annotation: ^2.1.0
   email_validator: ^2.1.17
@@ -48,8 +51,8 @@ dependencies:
   mask_text_input_formatter: ^2.4.0
   flutter_dotenv: ^5.0.2
   image_picker: ^0.8.5+3
-  firebase_storage: ^10.3.4
-  tinycolor2: ^2.1.0
+  firebase_storage: ^11.0.10
+  tinycolor2: ^3.0.1
 
 dev_dependencies:
   flutter_test:
@@ -73,11 +76,11 @@ flutter:
   fonts:
     - family: Inter
       fonts:
-        - asset: assets/fonts/Inter/static/Inter-Light.ttf
+        - asset: lib/fonts/Inter/static/Inter-Light.ttf
           weight: 300
-        - asset: assets/fonts/Inter/static/Inter-Medium.ttf
+        - asset: lib/fonts/Inter/static/Inter-Medium.ttf
           weight: 500
-        - asset: assets/fonts/Inter/static/Inter-SemiBold.ttf
+        - asset: lib/fonts/Inter/static/Inter-SemiBold.ttf
           weight: 600
     - family: Ultra
       fonts:
