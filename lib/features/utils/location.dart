@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:geolocator/geolocator.dart';
 
 import '../../domain/structures.dart';
@@ -61,31 +62,27 @@ class LocationPermissionCard extends StatelessWidget {
 
 typedef LocationResult = Either<Position, Failure>?;
 
+class _MockPosition extends Mock implements Position {
+  final double latitude;
+  final double longitude;
+  _MockPosition({required this.latitude, required this.longitude});
+}
+
 class LocationWrapper extends StatelessWidget {
   final Widget Function(BuildContext context, LocationResult info) builder;
   LocationWrapper({required this.builder});
 
-  static const _errorMessage =
-      """Não conseguimos obter sua localização. Por favor, cheque as permissões do aplicativo.""";
-
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<Position>(
-      future: Geolocator.getCurrentPosition(),
-      builder: (context, snapshot) {
-        if (snapshot.hasError) {
-          return builder(
-            context,
-            Either.failure(Failure(_errorMessage)),
-          );
-        }
-
-        final newPosition = snapshot.data;
-        return builder(
-          context,
-          newPosition == null ? null : Either.success(newPosition),
-        );
-      },
+    return builder(
+      context,
+      Either.success(
+        // Near Ibirapuera Park:
+        _MockPosition(
+          latitude: -23.57762608717703,
+          longitude: -46.64955920769962,
+        ),
+      ),
     );
   }
 }
