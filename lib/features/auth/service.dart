@@ -2,11 +2,13 @@ import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:get_it/get_it.dart';
 
 import '../../domain/structures.dart';
 
+final _firebaseAuth = GetIt.I.get<FirebaseAuth>();
+
 class EmailAuthService {
-  final _firebaseAuth = FirebaseAuth.instance;
   EmailAuthService();
 
   Future<Either<UserCredential, Failure>> signUp({
@@ -58,7 +60,7 @@ class EmailAuthService {
     required String newPassword,
   }) async {
     try {
-      final user = await FirebaseAuth.instance.currentUser;
+      final user = await _firebaseAuth.currentUser;
       if (user == null) {
         return Either.failure(Failure(
           'Você precisa estar logado para realizar essa operação',
@@ -84,20 +86,20 @@ class EmailAuthService {
 
 class UserAuthService {
   Future<void> setProfilePicture(String uid, File file) async {
-    final ref = FirebaseStorage.instance.ref().child('profiles/$uid');
+    final ref = GetIt.I.get<FirebaseStorage>().ref().child('profiles/$uid');
     await ref.putFile(file);
 
     final imageUrl = await ref.getDownloadURL();
-    final user = await FirebaseAuth.instance.currentUser;
+    final user = await _firebaseAuth.currentUser;
     user!.updatePhotoURL(imageUrl);
   }
 
   Future<void> signOut() async {
-    await FirebaseAuth.instance.signOut();
+    await _firebaseAuth.signOut();
   }
 
   Future<void> deleteAccount() async {
-    await FirebaseAuth.instance.currentUser!.delete();
+    await _firebaseAuth.currentUser!.delete();
   }
 }
 

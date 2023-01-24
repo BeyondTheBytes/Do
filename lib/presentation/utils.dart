@@ -145,11 +145,14 @@ class IconErrorWidget extends StatelessWidget {
   /// It's advised to use [HelpErrorButton]
   final Widget? button;
 
+  final TextStyle? style;
+
   const IconErrorWidget({
     required this.title,
     required this.description,
     required this.icon,
     this.button,
+    this.style,
   });
 
   static const iconSize = 55.0;
@@ -168,13 +171,19 @@ class IconErrorWidget extends StatelessWidget {
             Text(
               title,
               textAlign: TextAlign.center,
-              style: AppTexts.of(context).title3.copyWith(color: Colors.white),
+              style: AppTexts.of(context)
+                  .title3
+                  .copyWith(color: Colors.white)
+                  .merge(style),
             ),
             SizedBox(height: 3),
             Text(
               description,
               textAlign: TextAlign.center,
-              style: AppTexts.of(context).body1.copyWith(color: Colors.white),
+              style: AppTexts.of(context)
+                  .body1
+                  .copyWith(color: Colors.white)
+                  .merge(style),
             ),
             if (localButton != null) ...[
               SizedBox(height: 10),

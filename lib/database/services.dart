@@ -1,9 +1,12 @@
 import 'package:async/async.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
+import 'package:get_it/get_it.dart';
 
 import '../domain/utils.dart';
 import 'dataclass.dart';
+
+final _firestore = GetIt.I.get<FirebaseFirestore>();
 
 class EventDays {
   final List<Event> today;
@@ -16,7 +19,7 @@ class EventDays {
 
 class EventsService {
   CollectionReference<EventData> get collection =>
-      FirebaseFirestore.instance.collection('events').withConverter(
+      _firestore.collection('events').withConverter(
             fromFirestore: (doc, _) => EventData.fromJson(doc.data()!),
             toFirestore: (e, _) => e.toJson(),
           );
@@ -146,7 +149,7 @@ class EventsService {
 
 class UserConfigService {
   CollectionReference<Map<String, Object?>> get mapCollection =>
-      FirebaseFirestore.instance.collection('users');
+      _firestore.collection('users');
   CollectionReference<UserConfig> get collection => mapCollection.withConverter(
         fromFirestore: (doc, _) => UserConfig.fromJson(doc.data()),
         toFirestore: (e, _) => e.toJson(),
