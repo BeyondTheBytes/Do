@@ -254,9 +254,14 @@ class _LocalSearchState extends State<_LocalSearch> {
 
       final failure = locationResult?.failureOrNull;
       if (failure != null) {
-        return LocationPermissionCard(
-          failure: failure,
-          onAccept: () => setState(() {}),
+        return CustomButton(
+          onPressed: () =>
+              requestPermission(context, onAccept: () => setState(() {})),
+          style: AppButton.of(context).outlined,
+          child: Text(
+            'Habilite a localização.',
+            style: TextStyle(color: Colors.grey[800]),
+          ),
         );
       }
 
