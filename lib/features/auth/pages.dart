@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 
 import '../../config/routes.dart';
 import '../../database/services.dart';
@@ -12,6 +13,8 @@ import '../../presentation/theme.dart';
 import '../../presentation/utils.dart';
 import 'service.dart';
 import 'utils.dart';
+
+final _firebaseAuth = GetIt.I.get<FirebaseAuth>();
 
 class InitialPage extends StatelessWidget {
   final Widget Function(BuildContext) loggedBuilder;
@@ -24,7 +27,7 @@ class InitialPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<User?>(
-      future: FirebaseAuth.instance.authStateChanges().first,
+      future: _firebaseAuth.authStateChanges().first,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Scaffold(
