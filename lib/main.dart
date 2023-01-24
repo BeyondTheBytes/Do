@@ -1,15 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get_it/get_it.dart';
 
-import 'config/constants.dart';
 import 'config/routes.dart';
-import 'firebase_options.dart';
 import 'mocks.dart';
 import 'presentation/theme.dart';
 
@@ -31,25 +27,30 @@ class AppDependencies {
 }
 
 void main() async {
-  final deps = kReleaseMode
-      ? AppDependencies(
-          firebaseAuth: FirebaseAuth.instance,
-          firebaseFirestore: FirebaseFirestore.instance,
-          firebaseStorage: FirebaseStorage.instance,
-        )
-      : await mockDependencies();
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await prepareApp(
+    AppDependencies(
+      firebaseAuth: FirebaseAuth.instance,
+      firebaseFirestore: FirebaseFirestore.instance,
+      firebaseStorage: FirebaseStorage.instance,
+    ),
+  );
+
+  runApp(App());
+}
+
+// EXPORT
+
+Future<void> prepareApp([AppDependencies? dependencies]) async {
+  final deps = await mockDependencies();
   deps.injectDependencies(GetIt.I);
 
-  WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setSystemUIOverlayStyle(
     SystemUiOverlayStyle(statusBarBrightness: Brightness.dark),
   );
-  await Future.wait([
-    Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform),
-    Env.load(),
-    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]),
-  ]);
-  runApp(App());
+
+  await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 }
 
 class App extends StatelessWidget {
