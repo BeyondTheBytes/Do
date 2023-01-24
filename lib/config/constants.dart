@@ -19,12 +19,13 @@ class Constants {
 
 class Assets {
   static Widget profilePicture({bool alternate = false}) => alternate
-      ? SvgPicture.asset('assets/img/picture-inverted.svg')
-      : SvgPicture.asset('assets/img/picture.svg');
+      ? SvgPicture.asset('assets/img/picture-inverted.svg', package: 'do_app')
+      : SvgPicture.asset('assets/img/picture.svg', package: 'do_app');
 
   static Widget menu({bool alternate = false}) => SvgPicture.asset(
         'assets/img/menu.svg',
         alignment: Alignment.topLeft,
         color: Colors.white.withOpacity(0.7),
+        package: 'do_app',
       );
 }
