@@ -2,6 +2,7 @@ import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_auth_mocks/firebase_auth_mocks.dart';
 import 'package:firebase_storage_mocks/firebase_storage_mocks.dart';
+import 'package:geoflutterfire/geoflutterfire.dart';
 
 import 'database/dataclass.dart';
 import 'main.dart';
@@ -39,19 +40,86 @@ Future<AppDependencies> mockDependencies() async {
 
 class Mocks {
   static List<EventData> events() => [
-        // TODO:
-        // EventData(
-        //   sport: Sport.soccer,
-        //   date: DateTime.now().add(Duration(hours: 2)),
-        //   placeId: placeId,
-        //   placeDescription: placeDescription,
-        //   observations: observations,
-        //   creatorUid: creatorUid,
-        //   photoUrl: photoUrl,
-        //   point: point,
-        //   participants: participants,
-        // ),
+        // OLD as participant
+        event(
+          sport: Sport.soccer,
+          nowDiff: -Duration(days: 4, hours: 2),
+          amountParticipants: 23,
+          creatorUid: 'mock_uid',
+          isParticipant: true,
+          imageIndex: 0,
+        ),
+        event(
+          sport: Sport.soccer,
+          nowDiff: -Duration(days: 9, hours: 5),
+          amountParticipants: 11,
+          isParticipant: true,
+          imageIndex: 1,
+        ),
+        // NEW to participate
+        event(
+          sport: Sport.volleyball,
+          nowDiff: Duration(hours: 2),
+          isParticipant: false,
+          imageIndex: 0,
+          amountParticipants: 17,
+        ),
+        event(
+          sport: Sport.volleyball,
+          nowDiff: Duration(hours: 4),
+          isParticipant: false,
+          imageIndex: 1,
+          amountParticipants: 11,
+        ),
+        event(
+          sport: Sport.soccer,
+          nowDiff: Duration(hours: 1, minutes: 30),
+          isParticipant: false,
+          imageIndex: 2,
+          amountParticipants: 23,
+        ),
+        event(
+          sport: Sport.soccer,
+          nowDiff: Duration(hours: 3, minutes: 30),
+          isParticipant: false,
+          imageIndex: 3,
+          amountParticipants: 14,
+        ),
+        event(
+          sport: Sport.soccer,
+          nowDiff: Duration(hours: 5, minutes: 30),
+          isParticipant: false,
+          imageIndex: 4,
+          amountParticipants: 7,
+        ),
       ];
+
+  static EventData event({
+    required Duration nowDiff,
+    required int amountParticipants,
+    required bool isParticipant,
+    Sport sport = Sport.soccer,
+    int imageIndex = 0,
+    String creatorUid = 'user2',
+  }) {
+    final participants = <String, bool>{};
+    if (isParticipant) participants['mock_uid'] = true;
+    for (var i = 0; i < amountParticipants; i++) {
+      participants['user${i + 1}'] = true;
+    }
+
+    return EventData(
+      sport: sport,
+      date: DateTime.now().add(nowDiff),
+      placeId: 'ChIJ0RGdBvFZzpQRQeWcrwlhk8s',
+      placeDescription: 'Parque Ibirapuera',
+      observations: '',
+      creatorUid: creatorUid,
+      photoUrl: imagesSport(sport)[imageIndex],
+      point: GeoFirePoint(-23.587245094679023, -46.659524072456016),
+      participants: participants,
+    );
+  }
 
   static UserConfig userConfig() => UserConfig(
         sports: [Sport.soccer, Sport.volleyball],
