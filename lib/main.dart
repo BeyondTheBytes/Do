@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get_it/get_it.dart';
 
+import 'config/constants.dart';
 import 'config/routes.dart';
 import 'mocks.dart';
 import 'presentation/theme.dart';
@@ -43,6 +44,7 @@ Future<void> prepareApp([AppDependencies? dependencies]) async {
     SystemUiOverlayStyle(statusBarBrightness: Brightness.dark),
   );
 
+  await Env.load();
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 }
 
