@@ -20,7 +20,12 @@ import 'sports.dart';
 final _topColor = (BuildContext context) => AppColors.of(context).medium;
 final _bottomColor = (BuildContext context) => AppColors.of(context).darkest;
 
-class UserPage extends StatelessWidget {
+class UserPage extends StatefulWidget {
+  @override
+  State<UserPage> createState() => _UserPageState();
+}
+
+class _UserPageState extends State<UserPage> {
   final events = EventsService();
   final usersConfig = UserConfigService();
 
@@ -134,10 +139,12 @@ class UserPage extends StatelessWidget {
                 onTap: () => showDialog<void>(
                   context: context,
                   builder: (context) => DialogWrapper(
-                      child: _ChangeDescriptionDialog(
-                    uid: AppState.auth.currentUser!.uid,
-                    description: description,
-                  )),
+                    child: _ChangeDescriptionDialog(
+                      uid: AppState.auth.currentUser!.uid,
+                      description: description,
+                      onChange: () => setState(() {}),
+                    ),
+                  ),
                 ),
                 child: Text(
                   description.isNotEmpty ? 'editar' : 'adicionar',
@@ -275,9 +282,11 @@ class _SliverAppBar extends SliverPersistentHeaderDelegate {
 class _ChangeDescriptionDialog extends StatefulWidget {
   final String uid;
   final String description;
+  final Function() onChange;
   _ChangeDescriptionDialog({
     required this.uid,
     required this.description,
+    required this.onChange,
   });
 
   @override
@@ -318,6 +327,7 @@ class _ChangeDescriptionDialogState extends State<_ChangeDescriptionDialog> {
     final userConfig = UserConfigService();
     await userConfig.setDescription(widget.uid, description: controller.text);
 
+    widget.onChange();
     AppRouter.of(context).popDialog();
   }
 }
