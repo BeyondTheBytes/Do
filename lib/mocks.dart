@@ -108,9 +108,11 @@ class Mocks {
       participants['user${i + 1}'] = true;
     }
 
+    final date = DateTime.now().add(nowDiff);
     return EventData(
       sport: sport,
-      date: DateTime.now().add(nowDiff),
+      date: DateTime(date.year, date.month, date.day, date.hour,
+          date.minute - date.minute % 15),
       placeId: 'ChIJ0RGdBvFZzpQRQeWcrwlhk8s',
       placeDescription: 'Parque Ibirapuera',
       observations: '',
