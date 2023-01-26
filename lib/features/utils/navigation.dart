@@ -94,6 +94,7 @@ class _NavigationWrapperState extends State<NavigationWrapper> {
 
   @override
   Widget build(BuildContext context) {
+    final page = widget.pages[_selectedPage]!(context);
     return TweenAnimationBuilder<double>(
       duration: Duration(milliseconds: 350),
       curve: Curves.easeInOut,
@@ -101,11 +102,11 @@ class _NavigationWrapperState extends State<NavigationWrapper> {
         begin: 0,
         end: navigationController.fullpage ? 0 : 1,
       ),
-      builder: (context, percMenu, _) => _buildContent(context, percMenu),
+      builder: (context, percMenu, _) => _buildContent(context, percMenu, page),
     );
   }
 
-  Widget _buildContent(BuildContext context, double percMenu) {
+  Widget _buildContent(BuildContext context, double percMenu, Widget page) {
     final infoTop = MediaQuery.of(context).padding.top + 25;
     return Scaffold(
       backgroundColor: _backgroundColor(context),
@@ -119,16 +120,12 @@ class _NavigationWrapperState extends State<NavigationWrapper> {
             child: _buildNavigation(context),
           ),
         ),
-        _buildRoatingPage(
-          context,
-          percMenu,
-          child: widget.pages[_selectedPage]!(context),
-        ),
+        _buildRotatingPage(context, percMenu, child: page),
       ]),
     );
   }
 
-  Widget _buildRoatingPage(
+  Widget _buildRotatingPage(
     BuildContext context,
     double percMenu, {
     required Widget child,
@@ -152,7 +149,12 @@ class _NavigationWrapperState extends State<NavigationWrapper> {
             ],
           ),
           clipBehavior: Clip.hardEdge,
-          child: child,
+          child: GestureDetector(
+            onTap: (percMenu != 0)
+                ? () => navigationController.setFullpage(true)
+                : null,
+            child: child,
+          ),
         ),
       ),
     );

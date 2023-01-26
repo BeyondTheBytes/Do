@@ -313,24 +313,29 @@ class _LocalSearchState extends State<_LocalSearch> {
     List<AutocompletePrediction> predictions,
   ) {
     return Material(
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          border: Border.all(color: Colors.grey[400]!, width: 1),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black,
-              blurRadius: 3,
-              spreadRadius: -1,
-              offset: Offset(0, 5),
-            )
-          ],
-        ),
-        child: Column(
-          children: predictions
-              .map((prediction) => itemBuilder(context, prediction))
-              .withBetween(Container(height: 1, color: Colors.grey[400]))
-              .toList(),
+      child: Theme(
+        data: theme,
+        child: Builder(
+          builder: (context) => Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              border: Border.all(color: Colors.grey[400]!, width: 1),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black,
+                  blurRadius: 3,
+                  spreadRadius: -1,
+                  offset: Offset(0, 5),
+                )
+              ],
+            ),
+            child: Column(
+              children: predictions
+                  .map((prediction) => itemBuilder(context, prediction))
+                  .withBetween(Container(height: 1, color: Colors.grey[400]))
+                  .toList(),
+            ),
+          ),
         ),
       ),
     );

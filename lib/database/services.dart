@@ -142,7 +142,7 @@ class EventsService {
             e.docs.map((e) => Event(event: e.data(), id: e.id)).toList();
         // sorting here because otherwise it would require a
         // firestore composite index for each new user
-        events.sort((left, right) => left.date.compareTo(right.date));
+        events.sort((left, right) => right.date.compareTo(left.date));
         return events;
       });
 }

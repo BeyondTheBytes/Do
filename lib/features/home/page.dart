@@ -28,14 +28,19 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final userConfig = UserConfigService();
-
   final events = EventsService();
+
+  Color _backgroundColor(BuildContext context) => AppColors.of(context).darkest;
+  Widget _sliverWrapper(BuildContext context, Widget child) =>
+      SliverToBoxAdapter(
+        child: Container(color: _backgroundColor(context), child: child),
+      );
 
   @override
   Widget build(BuildContext context) {
     return LocationWrapper(
       builder: (context, locationResult) => Scaffold(
-        backgroundColor: AppColors.of(context).darkest,
+        backgroundColor: _backgroundColor(context),
         body: StreamBuilder<UserConfig>(
             stream: userConfig.stream(AppState.auth.currentUser!.uid),
             builder: (context, snapshot) {
@@ -81,8 +86,9 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
         if (sports != null) ...[
-          SliverToBoxAdapter(
-            child: DefaultHorizontalPadding(
+          _sliverWrapper(
+            context,
+            DefaultHorizontalPadding(
               child: Padding(
                 padding: const EdgeInsets.only(top: 15.0),
                 child: SportTags(sports: sports),
@@ -90,13 +96,14 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
           if (events != null) ...[
-            SliverToBoxAdapter(child: SizedBox(height: 50)),
+            _sliverWrapper(context, SizedBox(height: 50)),
             ..._buildEvents(context, events),
           ],
         ],
         if (locationFailure != null)
-          SliverToBoxAdapter(
-            child: Padding(
+          _sliverWrapper(
+            context,
+            Padding(
               padding: errorPadding,
               child: LocationPermissionCard(
                 failure: locationFailure,
@@ -105,8 +112,9 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
         if (events != null && events.isEmpty)
-          SliverToBoxAdapter(
-            child: DefaultHorizontalPadding(
+          _sliverWrapper(
+            context,
+            DefaultHorizontalPadding(
                 child: Padding(
               padding: errorPadding,
               child: IconErrorWidget(
@@ -122,8 +130,9 @@ class _HomePageState extends State<HomePage> {
             )),
           ),
         if (events != null && events.isNotEmpty)
-          SliverToBoxAdapter(
-            child: SizedBox(height: MediaQuery.of(context).padding.bottom + 10),
+          _sliverWrapper(
+            context,
+            SizedBox(height: MediaQuery.of(context).padding.bottom + 10),
           ),
       ],
     );
@@ -151,8 +160,7 @@ class _HomePageState extends State<HomePage> {
       if (events.tomorrow.isNotEmpty)
         ...buildDayEvents('Amanhã', events.tomorrow),
     ]
-        .map((e) =>
-            SliverToBoxAdapter(child: DefaultHorizontalPadding(child: e)))
+        .map((e) => _sliverWrapper(context, DefaultHorizontalPadding(child: e)))
         .toList();
   }
 

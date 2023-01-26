@@ -32,7 +32,7 @@ class InitialPage extends StatelessWidget {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Scaffold(
             backgroundColor: AppColors.of(context).darkest,
-            body: Center(child: CustomLoading()),
+            body: Center(child: CustomLoading.forceDefaultSize()),
           );
         }
 
