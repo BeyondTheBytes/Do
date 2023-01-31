@@ -1078,7 +1078,7 @@ packages:
       path: "/Users/lucadillenburg/Development/OpenSource/mock_firebase_functions"
       relative: false
     source: path
-    version: "0.0.1"
+    version: "0.0.2"
   mocktail:
     dependency: transitive
     description:
@@ -1440,7 +1440,7 @@ packages:
       name: social_share
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.3.1"
+    version: "2.2.1"
   source_gen:
     dependency: transitive
     description:
@@ -1588,6 +1588,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.0.1"
+  tuple:
+    dependency: transitive
+    description:
+      name: tuple
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.1"
   typed_data:
     dependency: transitive
     description:
