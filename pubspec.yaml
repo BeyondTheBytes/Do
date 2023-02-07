@@ -29,13 +29,17 @@ dependencies:
   flutter:
     sdk: flutter
   portfolio_commons:
-    path: /Users/lucadillenburg/Development/Projects/AppsPortfolio/packages/portfolio_commons
+    git:
+      url: git@github.com:DillenburgSoftwareSolutions/AppsLibrary.git
+      path: packages/portfolio_commons
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   portfolio_dev_commons:
-    path: /Users/lucadillenburg/Development/Projects/AppsPortfolio/packages/portfolio_dev_commons
+    git:
+      url: git@github.com:DillenburgSoftwareSolutions/AppsLibrary.git
+      path: packages/portfolio_dev_commons
 
 flutter:
   uses-material-design: true
