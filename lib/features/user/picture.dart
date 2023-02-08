@@ -95,11 +95,16 @@ class ProfilePicture extends StatelessWidget {
     );
 
     final authService = UserAuthService();
-    authService
-        .setProfilePicture(
-          AppState.auth.currentUser!.uid,
-          File(image.path),
-        )
-        .then((e) => controller.remove());
+    try {
+      await authService.setProfilePicture(
+        AppState.auth.currentUser!.uid,
+        File(image.path),
+      );
+      controller.remove();
+      // ignore: avoid_catches_without_on_clauses
+    } catch (e) {
+      print('Error: $e');
+      controller.remove();
+    }
   }
 }
