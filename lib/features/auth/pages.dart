@@ -27,20 +27,19 @@ class InitialPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<User?>(
+      initialData: _firebaseAuth.currentUser,
       future: _firebaseAuth.authStateChanges().first,
       builder: (context, snapshot) {
+        final data = snapshot.data;
+        if (data != null) return loggedBuilder(context);
+
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Scaffold(
             backgroundColor: AppColors.of(context).darkest,
             body: Center(child: CustomLoading.forceDefaultSize()),
           );
         }
-
-        final data = snapshot.data;
-        if (data == null) {
-          return unloggedBuilder(context);
-        }
-        return loggedBuilder(context);
+        return unloggedBuilder(context);
       },
     );
   }
