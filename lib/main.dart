@@ -36,6 +36,7 @@ void main() async {
 // EXPORT
 
 Future<void> prepareApp([AppDependencies? dependencies]) async {
+  GetIt.I.allowReassignment = true;
   final deps = await mockDependencies();
   deps.injectDependencies(GetIt.I);
 
