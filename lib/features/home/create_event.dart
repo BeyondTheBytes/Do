@@ -5,7 +5,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:google_place/google_place.dart';
 
 import '../../config/state.dart';
 import '../../database/dataclass.dart';
@@ -146,9 +145,7 @@ class _CreateEventDialogState extends State<CreateEventDialog> {
             mode: CupertinoTimerPickerMode.hm,
             minuteInterval: 5,
             onTimerDurationChanged: (newDuration) {
-              final timeOfDay = TimeOfDay(
-                  hour: newDuration.inHours,
-                  minute: newDuration.inMinutes % 60);
+              final timeOfDay = TimeOfDay(hour: newDuration.inHours, minute: newDuration.inMinutes % 60);
               setState(() => _selectedTime = timeOfDay);
             },
           ),
@@ -174,19 +171,16 @@ class _CreateEventDialogState extends State<CreateEventDialog> {
     final place = _selectedPlace;
     final sport = _selectedSport;
     if (day == null || time == null || place == null || sport == null) {
-      return ErrorMessage.of(context)
-          .show('Por favor, preencha todos os campos.');
+      return ErrorMessage.of(context).show('Por favor, preencha todos os campos.');
     }
 
     final placeId = place.placeId;
     if (placeId == null) {
-      return ErrorMessage.of(context)
-          .show('Por favor, digite o endereço completo.');
+      return ErrorMessage.of(context).show('Por favor, digite o endereço completo.');
     }
 
     final now = DateTime.now();
-    final todayTime =
-        DateTime(now.year, now.month, now.day, time.hour, time.minute);
+    final todayTime = DateTime(now.year, now.month, now.day, time.hour, time.minute);
     late final DateTime dateTime;
     switch (day) {
       case _EventDay.today:
@@ -197,8 +191,7 @@ class _CreateEventDialogState extends State<CreateEventDialog> {
         break;
     }
     if (dateTime.compareTo(DateTime.now()) < 0) {
-      return ErrorMessage.of(context)
-          .show('Por favor, escolha um horário futuro.');
+      return ErrorMessage.of(context).show('Por favor, escolha um horário futuro.');
     }
 
     final addressService = AddressService();
@@ -255,8 +248,7 @@ class _LocalSearchState extends State<_LocalSearch> {
       final failure = locationResult?.failureOrNull;
       if (failure != null) {
         return CustomButton(
-          onPressed: () =>
-              requestPermission(context, onAccept: () => setState(() {})),
+          onPressed: () => requestPermission(context, onAccept: () => setState(() {})),
           style: AppButton.of(context).outlined,
           child: Text(
             'Habilite a localização.',
@@ -266,13 +258,11 @@ class _LocalSearchState extends State<_LocalSearch> {
       }
 
       final location = locationResult?.successOrNull;
-      final text =
-          (selected == null) ? null : selected.structuredFormatting!.mainText!;
+      final text = (selected == null) ? null : selected.structuredFormatting!.mainText!;
       return TextField(
         controller: TextEditingController(text: text),
         decoration: InputDecoration(hintText: 'Local'),
-        onChanged:
-            location == null ? null : (v) => onChanged(context, v, location),
+        onChanged: location == null ? null : (v) => onChanged(context, v, location),
         enabled: locationResult != null,
       );
     });
@@ -362,9 +352,7 @@ class _LocalSearchState extends State<_LocalSearch> {
                 padding: const EdgeInsets.only(left: 4),
                 child: Text(
                   '${(prediction.distanceMeters! / 1000).floor()} km',
-                  style: AppTexts.of(context)
-                      .body1
-                      .copyWith(color: Colors.grey[800], fontSize: 12),
+                  style: AppTexts.of(context).body1.copyWith(color: Colors.grey[800], fontSize: 12),
                 ),
               ),
           ],

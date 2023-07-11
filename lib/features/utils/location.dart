@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:mocktail/mocktail.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:mocktail/mocktail.dart';
 
 import '../../domain/structures.dart';
 import '../../presentation/button.dart';
@@ -47,8 +47,7 @@ class LocationPermissionCard extends StatelessWidget {
         size: IconErrorWidget.iconSize,
       ),
       title: 'Habilite a Localização',
-      description:
-          """Precisamos da sua localização para encontrarmos eventos perto de você.""",
+      description: """Precisamos da sua localização para encontrarmos eventos perto de você.""",
       style: TextStyle(color: foregroundColor),
       button: CustomButton(
         child: Text('Habilitar'),
