@@ -18,22 +18,16 @@ class EventDays {
 }
 
 class EventsService {
-  CollectionReference<EventData> get collection =>
-      _firestore.collection('events').withConverter(
-            fromFirestore: (doc, _) => EventData.fromJson(doc.data()!),
-            toFirestore: (e, _) => e.toJson(),
-          );
+  CollectionReference<Map<String, Object?>> get collection => _firestore.collection('events');
 
-  static String _participateField(String uid) =>
-      '${DataclassesDocFields.eventParticipants}.$uid';
+  static String _participateField(String uid) => '${DataclassesDocFields.eventParticipants}.$uid';
 
-  Future<void> create(EventData event) => collection.doc().set(event);
+  Future<void> create(EventData event) => collection.doc().set(event.toJson());
   Future<void> delete(String id) => collection.doc(id).delete();
   Future<void> participate(String eventId, String uid) =>
       collection.doc(eventId).update({_participateField(uid): true});
-  Future<void> unparticipate(String eventId, String uid) => collection
-      .doc(eventId)
-      .update({_participateField(uid): FieldValue.delete()});
+  Future<void> unparticipate(String eventId, String uid) =>
+      collection.doc(eventId).update({_participateField(uid): FieldValue.delete()});
 
   // HOME
 
@@ -51,8 +45,7 @@ class EventsService {
         ).map((events) => _filterAndSortHomeEvents(events, date));
 
     final todayStream = databaseStream(from);
-    final tomorrow =
-        DateTime(from.year, from.month, from.day).add(Duration(days: 1));
+    final tomorrow = DateTime(from.year, from.month, from.day).add(Duration(days: 1));
     final tomorrowStream = databaseStream(tomorrow);
 
     return _join(todayStream, tomorrowStream);
@@ -84,8 +77,7 @@ class EventsService {
   List<Event> _filterAndSortHomeEvents(List<Event> events, DateTime from) {
     final filteredEvents = events
         .where(
-          (event) =>
-              event.date.compareTo(from.subtract(Duration(hours: 1))) >= 0,
+          (event) => event.date.compareTo(from.subtract(Duration(hours: 1))) >= 0,
         )
         .toList();
     filteredEvents.sort((left, right) => left.date.compareTo(right.date));
@@ -107,20 +99,18 @@ class EventsService {
           DataclassesDocFields.eventDay,
           isEqualTo: date,
         );
-    final databaseStream = Geoflutterfire()
-        .collectionWithConverter(collectionRef: ref)
-        .withinWithDistance(
+    final databaseStream = Geoflutterfire().collectionWithConverter(collectionRef: ref).withinWithDistance(
           center: userLocation,
           radius: radius,
           field: DataclassesDocFields.eventPoint,
           strictMode: true,
-          geopointFrom: (event) => event.point.geoPoint,
+          geopointFrom: (event) => EventData.fromJson(event).point.geoPoint,
         );
 
     return databaseStream.map(
       (docs) => docs
           .map((doc) => Event(
-                event: doc.documentSnapshot.data()!,
+                event: EventData.fromJson(doc.documentSnapshot.data()!),
                 id: doc.documentSnapshot.id,
               ))
           .toList(),
@@ -133,13 +123,10 @@ class EventsService {
       .where(DataclassesDocFields.eventCreatorUid, isEqualTo: uid)
       .orderBy(DataclassesDocFields.eventDate)
       .snapshots()
-      .map((e) => e.docs.map((e) => Event(event: e.data(), id: e.id)).toList());
-  Stream<List<Event>> asParticipant(String uid) => collection
-          .where(_participateField(uid), isEqualTo: true)
-          .snapshots()
-          .map((e) {
-        final events =
-            e.docs.map((e) => Event(event: e.data(), id: e.id)).toList();
+      .map((e) => e.docs.map((e) => Event(event: EventData.fromJson(e.data()), id: e.id)).toList());
+  Stream<List<Event>> asParticipant(String uid) =>
+      collection.where(_participateField(uid), isEqualTo: true).snapshots().map((e) {
+        final events = e.docs.map((e) => Event(event: EventData.fromJson(e.data()), id: e.id)).toList();
         // sorting here because otherwise it would require a
         // firestore composite index for each new user
         events.sort((left, right) => right.date.compareTo(left.date));
@@ -148,29 +135,20 @@ class EventsService {
 }
 
 class UserConfigService {
-  CollectionReference<Map<String, Object?>> get mapCollection =>
-      _firestore.collection('users');
-  CollectionReference<UserConfig> get collection => mapCollection.withConverter(
-        fromFirestore: (doc, _) => UserConfig.fromJson(doc.data()),
-        toFirestore: (e, _) => e.toJson(),
-      );
+  CollectionReference<Map<String, Object?>> get mapCollection => _firestore.collection('users');
+  CollectionReference<Map<String, Object?>> get collection => mapCollection;
 
-  Stream<UserConfig> stream(String uid) => collection
-      .doc(uid)
-      .snapshots()
-      .map((e) => e.data() ?? UserConfig.empty());
-  Future<void> setDescription(String uid, {required String description}) =>
-      mapCollection.doc(uid).set(
+  Stream<UserConfig> stream(String uid) =>
+      collection.doc(uid).snapshots().map((e) => e.data() != null ? UserConfig.fromJson(e.data()) : UserConfig.empty());
+  Future<void> setDescription(String uid, {required String description}) => mapCollection.doc(uid).set(
         {DataclassesDocFields.userDescription: description},
         SetOptions(merge: true),
       );
-  Future<void> setInterests(String uid, {required List<Sport> interests}) =>
-      mapCollection.doc(uid).set(
+  Future<void> setInterests(String uid, {required List<Sport> interests}) => mapCollection.doc(uid).set(
         {DataclassesDocFields.userSports: interests.map(sportCode).toList()},
         SetOptions(merge: true),
       );
-  Future<void> setPhone(String uid, {required String phone}) =>
-      mapCollection.doc(uid).set(
+  Future<void> setPhone(String uid, {required String phone}) => mapCollection.doc(uid).set(
         {DataclassesDocFields.userPhone: phone},
         SetOptions(merge: true),
       );
