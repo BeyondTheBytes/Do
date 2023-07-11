@@ -9,8 +9,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../config/routes.dart';
 import 'theme.dart';
 
-double getAppBarMinHeight(BuildContext context) =>
-    MediaQuery.of(context).padding.top + 60;
+double getAppBarMinHeight(BuildContext context) => MediaQuery.of(context).padding.top + 60;
 
 extension ListExtensions<J extends Widget> on Iterable<Widget> {
   List<Widget> withBetween<T extends Widget>(T separation) {
@@ -79,7 +78,7 @@ class EntryController {
 
   void insert(BuildContext context, OverlayEntry newEntry) {
     entry = newEntry;
-    Overlay.of(context)!.insert(newEntry);
+    Overlay.of(context).insert(newEntry);
   }
 }
 
@@ -125,9 +124,7 @@ class CustomDialog extends StatelessWidget {
           Text(
             title,
             textAlign: TextAlign.center,
-            style: large
-                ? AppTexts.of(context).title2
-                : AppTexts.of(context).title3,
+            style: large ? AppTexts.of(context).title2 : AppTexts.of(context).title3,
           ),
           large ? SizedBox(height: 15) : SizedBox(height: 10),
           child,
@@ -171,19 +168,13 @@ class IconErrorWidget extends StatelessWidget {
             Text(
               title,
               textAlign: TextAlign.center,
-              style: AppTexts.of(context)
-                  .title3
-                  .copyWith(color: Colors.white)
-                  .merge(style),
+              style: AppTexts.of(context).title3.copyWith(color: Colors.white).merge(style),
             ),
             SizedBox(height: 3),
             Text(
               description,
               textAlign: TextAlign.center,
-              style: AppTexts.of(context)
-                  .body1
-                  .copyWith(color: Colors.white)
-                  .merge(style),
+              style: AppTexts.of(context).body1.copyWith(color: Colors.white).merge(style),
             ),
             if (localButton != null) ...[
               SizedBox(height: 10),
@@ -257,8 +248,7 @@ class CustomLoading extends StatelessWidget {
 
   /// This should be used when this widget takes the size of the parent
   /// (i.e.: in a list view)
-  const CustomLoading.forceDefaultSize({this.value, this.color})
-      : forceDefaultSize = true;
+  const CustomLoading.forceDefaultSize({this.value, this.color}) : forceDefaultSize = true;
 
   static double defaultSize(BuildContext context) => min(
         115,
@@ -346,10 +336,8 @@ class PlatformSelect<T> extends StatelessWidget {
               child: CupertinoPicker(
                 itemExtent: cupertinoItemExtent,
                 useMagnifier: false,
-                children:
-                    items.map((item) => itemBuilder(context, item)).toList(),
-                onSelectedItemChanged: (index) =>
-                    onChanged(index < 0 ? null : items[index]),
+                children: items.map((item) => itemBuilder(context, item)).toList(),
+                onSelectedItemChanged: (index) => onChanged(index < 0 ? null : items[index]),
               ),
             ),
           );
@@ -522,7 +510,7 @@ abstract class _DisplayMessage {
 
     _addToOverlayList(key, overlayEntry);
 
-    Overlay.of(context)?.insert(overlayEntry);
+    Overlay.of(context).insert(overlayEntry);
 
     Future<void>.delayed(
       _waitAutomaticallyClose,
@@ -532,8 +520,7 @@ abstract class _DisplayMessage {
 
   // UNDERLYING DATA STRUCTURES
 
-  final SplayTreeMap<int, OverlayEntry> overlays =
-      SplayTreeMap.from(<int, OverlayEntry>{});
+  final SplayTreeMap<int, OverlayEntry> overlays = SplayTreeMap.from(<int, OverlayEntry>{});
 
   void _addToOverlayList(int key, OverlayEntry overlay) {
     overlays[key] = overlay;
@@ -607,8 +594,7 @@ class _DisplayMessageWidget extends StatelessWidget {
                 EntirelyTappable(
                   onTap: onPressedClose,
                   child: Container(
-                    padding:
-                        EdgeInsets.all(20).copyWith(right: horizontalPadding),
+                    padding: EdgeInsets.all(20).copyWith(right: horizontalPadding),
                     child: Icon(Icons.close, size: 15, color: foregroundColor),
                   ),
                 ),

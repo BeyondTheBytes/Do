@@ -357,10 +357,10 @@ packages:
     dependency: transitive
     description:
       name: dillenburglints
-      sha256: fb0786a92b7092b282926236ddb976f3e0af7ddfd4aa886780299dee92ba3efc
+      sha256: "620271c0f437e39084599636bb5a01a9b2814e48224376d1190ac519aa2d1210"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.2"
+    version: "1.0.3"
   dio:
     dependency: transitive
     description:
@@ -1699,10 +1699,10 @@ packages:
     dependency: transitive
     description:
       name: social_share
-      sha256: eb19a0f6f5a29c7bb71e5bb1991145eb52472184363b6e2da70695befd8be041
+      sha256: ed086f87e5324a9b7d3acb2a342bfa70c08a15592dc52f33f61d873081838722
       url: "https://pub.dev"
     source: hosted
-    version: "2.3.1"
+    version: "2.2.1"
   source_gen:
     dependency: transitive
     description:
