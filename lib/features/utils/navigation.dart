@@ -227,6 +227,9 @@ class _NavigationWrapperState extends State<NavigationWrapper> {
                   foregroundColor: MaterialStateProperty.all(
                     Colors.white,
                   ),
+                  side: MaterialStateProperty.all(
+                    BorderSide(color: Colors.white.withOpacity(0.2)),
+                  ),
                 ),
             onPressed: () {
               _signOut(context);

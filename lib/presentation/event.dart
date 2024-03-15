@@ -132,7 +132,7 @@ class EventHorizontalCard extends StatelessWidget {
           ),
         ),
         Container(
-          height: event.observations.isNotEmpty ? 80 : 63,
+          height: event.observations.isNotEmpty ? 80 : 67,
           child: _buildButton(context),
         ),
       ],
@@ -153,7 +153,7 @@ class EventHorizontalCard extends StatelessWidget {
       onTap: !canChange ? () {} : () => _updateStatus(context),
       child: Container(
         width: 60,
-        height: 80,
+        height: double.infinity,
         decoration: BoxDecoration(
           color: backgroundcolor,
           boxShadow: [
@@ -164,7 +164,7 @@ class EventHorizontalCard extends StatelessWidget {
             )
           ],
         ),
-        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),
         child: Icon(iconData, size: 16),
       ),
     );
